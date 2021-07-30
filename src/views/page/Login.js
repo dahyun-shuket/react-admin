@@ -18,7 +18,7 @@ import {
     InputGroupText,
     InputGroupProps
   } from "reactstrap";
-import { setUserSession, getToken } from '../../Utils/Common';
+import { setUserSession } from '../../Utils/Common';
 
 // import jQuery from 'jquery';
 // window.$ = window.jQuery = jQuery;
@@ -36,10 +36,6 @@ function LoginPage(props) {
  
             const Special = /[`~!@#$%^&*|\\\'\";:\/?]/gi;
 
-            const blank_pattern = /^\s+|\s+$/g;;
-            const Trim = /\s/gi;
-
-
             if(LOGINID === null || LOGINID === '' || LOGINID === undefined || PWD === null || PWD === '' || PWD === undefined) {
                 alert('빈칸을 입력하여 주세요')
                 return;
@@ -56,7 +52,6 @@ function LoginPage(props) {
                     console.log(response);
                     if(response.data.result === 'success') {
                         setUserSession(response.data.data.token);
-                        // sessionStorage.setItem('token', response.data.data.token);
                         alert('로그인 성공')
                          props.history.push('/admin');
                     } else if(response.data.result === 'fail') {
@@ -71,51 +66,11 @@ function LoginPage(props) {
                     alert(error,'로그인 실패')
                 })
             }
-
-
-
-
         }
-    
-
 
 
     return (
-        // <>
-        //     <Container className='container-fluid' style={{border:'1px solid red'}}>
-        //         <Row className="justify-content-center " style={{border:'1px solid blue'}}>
-        //             <Col md="6 ">
-        //                 <Card  className="p-4 ">
-        //                 <CardHeader>
-        //                     <h5 className="title">로그인</h5>
-        //                 </CardHeader>
-        //                     <CardBody>
-        //                     <Form onSubmit={onSubmitHandler}>
-        //                         <FormGroup className="form-group" >
-        //                             <Label>아이디를 입력하여 주세요.</Label>
-        //                             <Input type="text" className='form-control' placeholder="Enter ID" id="LOGINID" name="LOGINID" value={LOGINID || ''} onChange={e => setLOGINID(e.target.value)} />
-        //                         </FormGroup>
-        //                         <FormGroup style={{marginTop:'20px'}}>
-        //                             <Label>비밀번호를 입력하여 주세요.</Label>
-        //                             <Input type="password" className='form-control'  placeholder="Enter Password" id="PWD" name="PWD" value={PWD || ''} onChange={e => setPWD(e.target.value)} />
-        //                         </FormGroup>
-        //                         <Button variant="primary" type="submit" className="btn btn-primary btn-block" style={{marginTop:'30px'}} onClick={onClickLogin}>
-        //                             로그인
-        //                         </Button>
-        //                         <Link to='/register'>
-        //                                 <p className='forgot-password text-right'>
-        //                                     회원가입 하러가기
-        //                                 </p>
-        //                             </Link>
-        //                     </Form>
-        //                     </CardBody>
-        //                 </Card>
-        //             </Col>
-        //         </Row>
-        //     </Container>
-        // </>
-
-    <Container>
+      <Container>
         <Row className="justify-content-center">
           <Col md="8" style={{ marginTop:'10%'}}>
             <CardGroup>

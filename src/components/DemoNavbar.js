@@ -13,7 +13,10 @@ import {
   DropdownMenu,
   DropdownItem,
   Container,
+  FormGroup,
   InputGroup,
+  Button,
+  Form ,
   InputGroupText,
   InputGroupAddon,
   Input,
@@ -134,14 +137,12 @@ function DemoNavbar(props) {
           <span className="navbar-toggler-bar navbar-kebab" />
         </NavbarToggler>
         <Collapse isOpen={isOpen} navbar className="justify-content-end">
-          <form>
-            <InputGroup className="no-border" style={{border:'1px solid purple'}}>
-              <Input style={{border:'1px solid red'}} placeholder="Search..." />
-              <InputGroupAddon addonType="append">
-                <InputGroupText style={{border:'1px solid blue', zIndex:'-10'}}>
-                  <i className="now-ui-icons ui-1_zoom-bold" />
+        <form>
+            <InputGroup className="no-border">
+              <Input  placeholder="Search..." />
+                <InputGroupText >
+                  <i  className="now-ui-icons ui-1_zoom-bold" />
                 </InputGroupText>
-              </InputGroupAddon>
             </InputGroup>
           </form>
           <Nav navbar>

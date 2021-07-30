@@ -1,3 +1,20 @@
+/*!
+
+=========================================================
+* Now UI Dashboard React - v1.5.0
+=========================================================
+
+* Product Page: https://www.creative-tim.com/product/now-ui-dashboard-react
+* Copyright 2021 Creative Tim (https://www.creative-tim.com)
+* Licensed under MIT (https://github.com/creativetimofficial/now-ui-dashboard-react/blob/main/LICENSE.md)
+
+* Coded by Creative Tim
+
+=========================================================
+
+* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+*/
 import React from "react";
 // react plugin for creating notifications over the dashboard
 import NotificationAlert from "react-notification-alert";
@@ -171,7 +188,7 @@ function Notifications() {
               <CardBody>
                 <div className="places-buttons">
                   <Row>
-                    <Col md={6} className="ml-auto mr-auto text-center">
+                    <Col md={12} className="ml-auto mr-auto text-center">
                       <CardTitle tag="h4">
                         Notifications Places
                         <p className="category">Click to view notifications</p>
@@ -179,7 +196,7 @@ function Notifications() {
                     </Col>
                   </Row>
                   <Row>
-                    <Col lg={8} xs={12} className="ml-auto mr-auto">
+                    <Col lg={6} xs={12} className="ml-auto mr-auto">
                       <Row>
                         <Col md={4} xs={12}>
                           <Button
