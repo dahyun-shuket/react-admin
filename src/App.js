@@ -1,25 +1,57 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState, useEffect } from 'react';
+import ReactDOM from "react-dom";
+import { BrowserRouter, Route, Switch, Redirect, NavLink } from "react-router-dom";
+import axios from 'axios';
 
-function App() {
+import "bootstrap/dist/css/bootstrap.css";
+import "./assets/scss/now-ui-dashboard.scss?v1.5.0";
+import './assets/css/demo.css';
+
+import LoginPage from './views/page/Login';
+import AdminLayout from "./components/Admin.js";
+import Register from './views/page/Register';
+
+import PrivateRoute from './Utils/PrivateRoute';
+import PublicRoute from './Utils/PublicRoute';
+import { getToken, removeUserSession, setUserSession } from './Utils/Common';
+
+export default function App(props) {
+
+  const [authLoading, setAuthLoading] = useState(true);
+  const [user, setUser] = useState(null);
+  const authenticated = user != null;
+
+  useEffect(() => {
+    const token = getToken();
+    if (!token) { 
+      return;
+    }
+
+      if (authLoading && getToken()) {
+    return <div className="content">Checking Authentication...</div>
+  }
+
+    axios.get(`http://localhost:3333/verifyToken?token=${token}`).then(response => {
+      setUserSession(response.data.token, response.data.user);
+      setAuthLoading(false);
+    }).catch(error => {
+      removeUserSession();
+      setAuthLoading(false);
+    });
+  }, []);
+    
+  localStorage.setItem('authenticated', authenticated)
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+        <>
+          <BrowserRouter>
+            <Switch>
+              <PrivateRoute path="/admin" component={AdminLayout}  />
+              <PublicRoute restricted exact path='/login' name='login' component={LoginPage} />
+              <PublicRoute restricted exact path="/Register"  name="Register Page" component={Register}  />
+              <PrivateRoute path='/' component={AdminLayout} />
+            </Switch>
+          </BrowserRouter>
+        </>
+      );
 }
-
-export default App;
