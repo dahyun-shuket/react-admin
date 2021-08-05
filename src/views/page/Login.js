@@ -51,7 +51,7 @@ function LoginPage(props) {
                 .then(response => {
                     console.log(response);
                     if(response.data.result === 'success') {
-                        setUserSession(response.data.data.token);
+                        setUserSession(response.data.data.token, response.data.data.loginId);
                         alert('로그인 성공')
                          props.history.push('/admin');
                     } else if(response.data.result === 'fail') {

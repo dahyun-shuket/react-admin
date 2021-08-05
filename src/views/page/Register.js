@@ -93,7 +93,7 @@ const Register = (props) => {
                                         회원가입
                                     </Button>
                                     <Link to='/login'>
-                                        <p className='forgot-password text-right'>
+                                        <p className='forgot-password text-right' style={{textAlign:'right'}}>
                                             로그인 하러가기
                                         </p>
                                     </Link>
