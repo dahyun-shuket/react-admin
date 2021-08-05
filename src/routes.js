@@ -6,6 +6,8 @@ import Dashboard from "views/Dashboard.js";
 // import Maps from "views/Maps.js";
 // import Upgrade from "views/Upgrade.js";
 import UserPage from "views/UserPage.js";
+import TestPage from "views/Test.js";
+
 // import LoginPage from "views/Login";
 
 var dashRoutes = [
@@ -50,6 +52,13 @@ var dashRoutes = [
     name: "User Profile",
     icon: "users_single-02",
     component: UserPage,
+    layout: "/admin",
+  },
+  {
+    path: "/test-page",
+    name: "Test Page",
+    icon: "users_single-02",
+    component: TestPage,
     layout: "/admin",
   },
   // {

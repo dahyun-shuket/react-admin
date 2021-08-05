@@ -9,7 +9,7 @@ import { Route, Switch, Redirect, useLocation } from "react-router-dom";
 import DemoNavbar from "./DemoNavbar.js";
 import Footer from "./Footer.js";
 import Sidebar from "./Sidebar.js";
-import FixedPlugin from "./FixedPlugin.js";
+// import FixedPlugin from "./FixedPlugin.js";
 
 import routes from "../routes.js";
 
@@ -36,9 +36,9 @@ function Admin(props) {
     document.scrollingElement.scrollTop = 0;
     mainPanel.current.scrollTop = 0;
   }, [location]);
-  const handleColorClick = (color) => {
-    setBackgroundColor(color);
-  };
+  // const handleColorClick = (color) => {
+  //   setBackgroundColor(color);
+  // };
   return (
     <div className="wrapper">
       <Sidebar {...props} routes={routes} backgroundColor={backgroundColor} />
@@ -58,10 +58,10 @@ function Admin(props) {
         </Switch>
         <Footer fluid />
       </div>
-      <FixedPlugin
+      {/* <FixedPlugin
         bgColor={backgroundColor}
         handleColorClick={handleColorClick}
-      />
+      /> */}
     </div>
   );
 }

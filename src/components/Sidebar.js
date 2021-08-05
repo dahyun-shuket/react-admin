@@ -49,7 +49,7 @@ function Sidebar(props) {
     <div className="sidebar" data-color={props.backgroundColor}>
       <div className="logo">
         <a
-          href="https://www.creative-tim.com?ref=nudr-sidebar"
+          href="http://shuket.co.kr/"
           className="simple-text logo-mini"
           target="_blank"
         >
@@ -62,8 +62,7 @@ function Sidebar(props) {
           className="simple-text logo-normal"
           target="_blank"
         >
-          {/* href="https://www.creative-tim.com?ref=nudr-sidebar" */}
-          Creative Tim
+          SHUKET
         </a>
       </div>
       <div className="sidebar-wrapper" ref={sidebar}>

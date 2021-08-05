@@ -56,7 +56,7 @@ function Dashboard() {
   return (
     <>
       <PanelHeader
-        size="lg"
+        // size="lg"
         //content={
           // <Line
           //   data={dashboardPanelChart.data}
@@ -88,7 +88,6 @@ function Dashboard() {
                   </DropdownMenu>
                 </UncontrolledDropdown>
               </CardHeader>
-     
               <CardFooter>
                 <div className="stats">
                   <i className="now-ui-icons arrows-1_refresh-69" /> Just
