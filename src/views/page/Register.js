@@ -30,8 +30,6 @@ const Register = (props) => {
             axios
                 .post("http://localhost:3333/api/users/idCheck", { LOGINID: LOGINID })
                 .then((response) => {
-                    // alert(response.data.data.tf);
-                    // alert("로그인 체크");
                     if (response.data.data.tf === true) {
                         axios
                             .post(url, { LOGINID: LOGINID, PWD: PWD })
@@ -86,15 +84,10 @@ const Register = (props) => {
                                     <Button variant="primary" type="submit" className="btn btn-primary btn-block" onClick={onClickJoin}>
                                         회원가입
                                     </Button>
-<<<<<<< HEAD
-                                    <Link to="/login">
-                                        <p className="forgot-password text-right">로그인 하러가기</p>
-=======
                                     <Link to='/login'>
                                         <p className='forgot-password text-right' style={{textAlign:'right'}}>
                                             로그인 하러가기
                                         </p>
->>>>>>> 4c6bd489922adc3c43f1b6a00f9ec4c234ca2c8d
                                     </Link>
                                 </Form>
                             </CardBody>
