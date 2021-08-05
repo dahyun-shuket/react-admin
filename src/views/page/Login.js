@@ -32,6 +32,7 @@ function LoginPage(props) {
                 .post(url, { LOGINID: LOGINID, PWD: PWD })
                 .then((response) => {
                     console.log(response);
+<<<<<<< HEAD
                     if (response.data.result === "success") {
                         setUserSession(response.data.data.token);
                         alert("로그인 성공");
@@ -39,6 +40,15 @@ function LoginPage(props) {
                     } else if (response.data.result === "fail") {
                         alert("로그인에 실패하였습니다.");
                         return;
+=======
+                    if(response.data.result === 'success') {
+                        setUserSession(response.data.data.token, response.data.data.loginId);
+                        alert('로그인 성공')
+                         props.history.push('/admin');
+                    } else if(response.data.result === 'fail') {
+                        alert('로그인에 실패하였습니다.')
+                        return
+>>>>>>> 4c6bd489922adc3c43f1b6a00f9ec4c234ca2c8d
                     }
                 })
                 .catch((error) => {
