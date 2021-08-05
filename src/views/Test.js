@@ -16,7 +16,7 @@ const Test = () => {
                             <h5 className="title">Left Test</h5>
                         </CardHeader>
                         <CardBody>
-                            <h3>Body</h3>
+                            <h3>Left Body</h3>
                         </CardBody>
                         <CardFooter>
                             Footer
@@ -29,7 +29,7 @@ const Test = () => {
                                 <h5 className="title">Right Test</h5>
                             </CardHeader>
                             <CardBody>
-                                <h3>Body</h3>
+                                <h3>Right Body</h3>
                             </CardBody>
                             <CardFooter>
                                 Footer
