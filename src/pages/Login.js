@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Link, Router } from "react-router-dom";
 import axios from "axios";
 import { Card, CardHeader, CardBody, Row, Col, Button, Form, Label, FormGroup, Input, Container, CardGroup, InputGroup, InputGroupText, InputGroupProps } from "reactstrap";
-import { setUserSession } from "../../Utils/Common";
+import { setUserSession } from "../Utils/Common";
 
 // import jQuery from 'jquery';
 // window.$ = window.jQuery = jQuery;

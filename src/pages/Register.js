@@ -13,6 +13,8 @@ const Register = (props) => {
 
         let url = "http://localhost:3333/api/users/create";
         const Special = /[`~!@#$%^&*|\\\'\";:\/?]/gi;
+        const pattern = /\s/g; 
+        const str = LOGINID.value || PWD.value;
 
         if (PWD !== repwd) {
             alert("비밀번호를 다시 확인하여 주세요");
@@ -26,10 +28,19 @@ const Register = (props) => {
         } else if (LOGINID === Special) {
             alert("아이디에 특수문자는 사용할 수 없습니다.");
             return false;
+        } else if( LOGINID.search(/\s/g) !== -1 ) {
+            alert('아이디에 공백은 포함 할 수 없습니다.');
+            return false;
+        } else if( PWD.search(/\s/g) !== -1 || repwd.search(/\s/g) !== -1 ) {
+            alert('비밀번호에 공백이 확인되었습니다. \n공백을 제거하여 주세요.');
+            return false;
         } else {
             axios
                 .post("http://localhost:3333/api/users/idCheck", { LOGINID: LOGINID })
                 .then((response) => {
+                    // alert(response.data.data.tf);
+                    // alert("로그인 체크");
+                    // console.log('response: ', response);
                     if (response.data.data.tf === true) {
                         axios
                             .post(url, { LOGINID: LOGINID, PWD: PWD })
@@ -54,7 +65,7 @@ const Register = (props) => {
                 .catch((error) => {
                     alert(error, "아이디 체크 에러");
                 });
-        }
+        }  
     };
 
     return (
@@ -71,7 +82,7 @@ const Register = (props) => {
                                 <Form>
                                     <FormGroup className="form-group">
                                         <Label>아이디를 입력하여 주세요.</Label>
-                                        <Input type="text" className="form-control" placeholder="Enter ID" name="LOGINID" value={LOGINID || ""} onChange={(e) => setLOGINID(e.target.value)} />
+                                        <Input type="text" className="form-control" placeholder="Enter ID" id="LOGINID" name="LOGINID" value={LOGINID || ""} onChange={(e) => setLOGINID(e.target.value)} />
                                     </FormGroup>
                                     <FormGroup className="form-group">
                                         <Label>비밀번호를 입력하여 주세요.</Label>
@@ -84,6 +95,7 @@ const Register = (props) => {
                                     <Button variant="primary" type="submit" className="btn btn-primary btn-block" onClick={onClickJoin}>
                                         회원가입
                                     </Button>
+
                                     <Link to='/login'>
                                         <p className='forgot-password text-right' style={{textAlign:'right'}}>
                                             로그인 하러가기

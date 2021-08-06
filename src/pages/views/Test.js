@@ -2,7 +2,7 @@ import React from "react";
 
 import { Button, Card, CardHeader, CardBody, FormGroup, Form, Input, Row, Col, CardFooter } from "reactstrap";
 
-import PanelHeader from "components/PanelHeader.js";
+import PanelHeader from "../../templates/PanelHeader";
 
 const Test = () => {
     return (

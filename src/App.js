@@ -7,9 +7,9 @@ import "bootstrap/dist/css/bootstrap.css";
 import "./assets/scss/now-ui-dashboard.scss?v1.5.0";
 import './assets/css/demo.css';
 
-import LoginPage from './views/page/Login';
-import AdminLayout from "./components/Admin.js";
-import Register from './views/page/Register';
+import LoginPage from './pages/Login';
+import AdminLayout from "./templates/Admin";
+import Register from './pages/Register';
 
 import PrivateRoute from './Utils/PrivateRoute';
 import PublicRoute from './Utils/PublicRoute';

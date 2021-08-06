@@ -42,7 +42,7 @@ import {
 
 // core components
 // import PanelHeader from "./components/PanelHeader/PanelHeader.js";
-import PanelHeader from "../components/PanelHeader";
+import PanelHeader from "../../templates/PanelHeader";
 
 // ydh 차트
 // import {

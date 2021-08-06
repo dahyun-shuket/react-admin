@@ -1,12 +1,12 @@
-import Dashboard from "views/Dashboard.js";
+import Dashboard from "./pages/views/Dashboard";
 // import Notifications from "views/Notifications.js";
 // import Icons from "views/Icons.js";
 // import Typography from "views/Typography.js";
 // import TableList from "views/TableList.js";
 // import Maps from "views/Maps.js";
 // import Upgrade from "views/Upgrade.js";
-import UserPage from "views/UserPage.js";
-import TestPage from "views/Test.js";
+import UserPage from "./pages/views/UserPage.js";
+import TestPage from "./pages/views/Test.js";
 
 // import LoginPage from "views/Login";
 
