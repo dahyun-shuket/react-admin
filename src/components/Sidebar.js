@@ -58,7 +58,6 @@ function Sidebar(props) {
           </div>
         </a>
         <a
-          
           className="simple-text logo-normal"
           target="_blank"
         >
