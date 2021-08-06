@@ -1,6 +1,6 @@
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
-import { removeUserSession } from "Utils/Common";
+import { removeUserSession } from "../Utils/Common";
 import {
   Collapse,
   Navbar,

@@ -30,7 +30,7 @@ import {
 } from "reactstrap";
 
 // core components
-import PanelHeader from "components/PanelHeader.js";
+import PanelHeader from "../../templates/PanelHeader";
 
 function Upgrade() {
   return (
