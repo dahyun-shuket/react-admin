@@ -1,5 +1,5 @@
 import React from "react";
-import { Link, useLocation } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import { removeUserSession } from "../Utils/Common";
 import {
   Collapse,
@@ -7,18 +7,13 @@ import {
   NavbarToggler,
   NavbarBrand,
   Nav,
-  NavItem,
   Dropdown,
   DropdownToggle,
   DropdownMenu,
   DropdownItem,
   Container,
-  FormGroup,
   InputGroup,
-  Button,
-  Form ,
   InputGroupText,
-  InputGroupAddon,
   Input,
 } from "reactstrap";
 

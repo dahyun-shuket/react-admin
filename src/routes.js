@@ -7,6 +7,9 @@ import Dashboard from "./pages/views/Dashboard";
 // import Upgrade from "views/Upgrade.js";
 import UserPage from "./pages/views/UserPage.js";
 import TestPage from "./pages/views/Test.js";
+import Recruit from "./pages/views/Recruit.js";
+import Resume from "./pages/views/Resume.js"
+
 
 // import LoginPage from "views/Login";
 
@@ -61,6 +64,27 @@ var dashRoutes = [
     component: TestPage,
     layout: "/admin",
   },
+  {
+    path: "/recruit",
+    name: "공고 관리",
+    icon: "files_single-copy-04", 
+    component: Recruit,
+    layout: "/admin",
+  },
+  {
+    path: "/resume",
+    name: "이력서 관리",
+    icon: "files_paper",
+    component: Resume,
+    layout: "/admin",
+  },
+  // {
+  //   path: "/recruit/detail",
+  //   name: "Recruit Page",
+  //   icon: "users_single-02",
+  //   component: Recruit,
+  //   layout: "/admin",
+  // },
   // {
   //   path: "/extended-tables",
   //   name: "Table List",

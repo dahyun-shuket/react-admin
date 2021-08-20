@@ -15,6 +15,7 @@ import PrivateRoute from './Utils/PrivateRoute';
 import PublicRoute from './Utils/PublicRoute';
 import { getToken, removeUserSession, setUserSession } from './Utils/Common';
 
+
 export default function App(props) {
 
   const [authLoading, setAuthLoading] = useState(true);

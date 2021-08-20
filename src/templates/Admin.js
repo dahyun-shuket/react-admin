@@ -12,12 +12,13 @@ import Sidebar from "./Sidebar.js";
 // import FixedPlugin from "./FixedPlugin.js";
 
 import routes from "../routes.js";
-
+import RecruitView from "../pages/views/RecruitView.js";
+import ResumeView from "../pages/views/ResumeView.js"
 var ps;
 
 function Admin(props) {
   const location = useLocation();
-  const [backgroundColor, setBackgroundColor] = React.useState("blue");
+  const [backgroundColor] = React.useState("blue");
   const mainPanel = React.useRef();
   React.useEffect(() => {
     if (navigator.platform.indexOf("Win") > -1) {
@@ -45,6 +46,8 @@ function Admin(props) {
       <div className="main-panel" ref={mainPanel}>
         <DemoNavbar {...props} />
         <Switch>
+          <Route path="/admin/recruit/:id" component={RecruitView}></Route>
+          <Route path="/admin/resume/:id" component={ResumeView}></Route>
           {routes.map((prop, key) => {
             return (
               <Route
