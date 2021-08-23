@@ -40,7 +40,13 @@ const Mart = (props) => {
       martLists();
     }, [refresh]);
 
-
+    const stateRefresh = async () => {
+      setInterval(() => {
+        setLoading((prevProgress) => (prevProgress >= 100 ? 0 : prevProgress + 1));
+      }, 20);
+      const result = await axios.post('http://localhost:3333/api/mart/list');
+      setPosts(result.data.data.list);
+    }
 
 
 
@@ -82,19 +88,16 @@ const Mart = (props) => {
   setNAME('');
   setADDRESS('');
 }
-// 검색 리셋
 const MartSearchReset = () => {
-  // setLoading(true);
-  setNAME.value('');
-  window.location.reload();
-  axios.post("http://localhost:3333/api/mart/list")
-      .then((response) => {
-      setNAME('');
-      setPosts(response.data.data.list);
-      // setLoading(false);
-  });
-}
-
+  setLoading(true);
+  axios.post("http://localhost:3333/api/mart/list",{
+      NAME: NAME
+  })
+    .then((res) => {
+      setPosts(res.data.data.list);
+      setLoading(false);
+    })
+};
     const indexOfLastPost = currentPage * postsPerPage;
     const indexOfFirstPost = indexOfLastPost - postsPerPage;
     const currentPosts = posts.slice(indexOfFirstPost, indexOfLastPost);
@@ -147,7 +150,7 @@ const MartSearchReset = () => {
                         </tr>
                       </thead>
                       <tbody>
-                        <MartList posts={currentPosts}></MartList>
+                        <MartList posts={currentPosts}  ></MartList>
                       </tbody>
                     </Table>
                   </CardBody>

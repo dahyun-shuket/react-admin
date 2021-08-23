@@ -16,13 +16,17 @@ const thead = ["아이디", "구분", "생성일", "수정일"];
 const RegularTables = ({props}) => {
 
     const [posts, setPosts] = useState([]);
-    const [test, setTest] = useState([]);
+    const [Aposts, setAPosts] = useState([]);
+    const [Mposts, setMPosts] = useState([]);
+    const [Uposts, setUPosts] = useState([]);
     const [refresh, setRefresh] = useState(0);
     // users
     const [SEQ, setSEQ] = useState('');
     const [LOGINID, setLOGINID] = useState('');
     const [PWD, setPWD] = useState('');
-    const [USERTYPE, setUSERTYPE] = useState('');
+    const [USERTYPE, setUSERTYPE] = useState(null);
+    const [ATYPE, setATYPE] = useState('');
+    const [MTYPE, setMTYPE] = useState('');
     // modal
     const [modal, setModal] = useState(false);
     const toggle = () => setModal(!modal);
@@ -33,49 +37,37 @@ const RegularTables = ({props}) => {
     // Tab
     const [activeTab, setActiveTab] = useState('1');
     const toggleTab = tab => {
-        if(activeTab !== tab) setActiveTab(tab);
+        if(activeTab !== tab) setActiveTab(tab)
     }
+    
     // 페이지
     const [loading, setLoading] = useState(false);
     const [currentPage, setCurrentPage] = useState(1);
     const [postsPerPage] = useState(11);
-
+    
     const url = 'http://localhost:3333/api/users/list';
 
-    const AdminType = async () => {
+    useEffect(() => {
       setLoading(true);
-      axios.post(url, {
-        USERTYPE: 'A'
-      })
+      axios.post(url+`?usertype=${USERTYPE}`, {USERTYPE:'A'})
         .then((res) => {
-          setPosts(res.data.data.list);
+          setAPosts(res.data.data.list)
           setLoading(false);
         })
-    }
-    const MartType = async () => {
-      setLoading(true);
-      axios.post(url, {
-        USERTYPE: 'M'
-      })
-        .then((res) => {
-          setPosts(res.data.data.list);
-          setLoading(false);
-        })
-    }
-    const UserType = async () => {
-      setLoading(true);
-      axios.post(url, {
-        USERTYPE: 'U'
-      })
-        .then((res) => {
-          setPosts(res.data.data.list);
-          setLoading(false);
-        })
-    }
+    }, [refresh])
 
     useEffect(() => {
-      AdminType()
+      axios.post(url+`?usertype=${USERTYPE}`, {USERTYPE:'M'})
+        .then((res) => {
+          setMPosts(res.data.data.list)
+        })
+    }, [refresh])
 
+    useEffect(() => {
+      axios.post(url+`?usertype=${USERTYPE}`, {USERTYPE:'U'})
+        .then((res) => {
+          setUPosts(res.data.data.list)
+        })
     }, [refresh])
 
     const ResumetList = async () => {
@@ -99,29 +91,19 @@ const RegularTables = ({props}) => {
 }
 
     // 검색 버튼
-    const SearchButton = async () => {
+    const SearchButton = () => {
       setLoading(true);
+      setLOGINID('');
       axios.post("http://localhost:3333/api/users/list",{
           LOGINID: LOGINID,
           USERTYPE: getRegions()
       })
         .then((res) => {
-          setPosts(res.data.data.list);
+          setAPosts(res.data.data.list);
+          setMPosts(res.data.data.list);
+          setUPosts(res.data.data.list);
           setLoading(false);
         })
-      //     .then((res) => {
-      //       if(posts.USERTYPE === 'A') {
-      //         console.log('A 검색 성공')
-      //         setPosts(res.data.data.list) 
-      //       } else if (posts.USERTYPE === 'M') {
-      //         console.log('M 검색 성공')
-      //         setPosts(res.data.data.list)
-      //       } else if (posts.USERTYPE === 'U') {
-      //         console.log('U 검색 성공')
-      //         setPosts(res.data.data.list)
-      //       }
-      //       setLoading(false);
-      // });
   };
 
   // 추가 모달
@@ -176,9 +158,11 @@ const RegularTables = ({props}) => {
 
   
 
-  const indexOfLastPost = currentPage * postsPerPage;
+    const indexOfLastPost = currentPage * postsPerPage;
     const indexOfFirstPost = indexOfLastPost - postsPerPage;
-    const currentPosts = posts.slice(indexOfFirstPost, indexOfLastPost);
+    const currentAPosts = Aposts.slice(indexOfFirstPost, indexOfLastPost);
+    const currentMPosts = Mposts.slice(indexOfFirstPost, indexOfLastPost);
+    const currentUPosts = Uposts.slice(indexOfFirstPost, indexOfLastPost);
     const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
     if (loading) {
@@ -189,9 +173,10 @@ const RegularTables = ({props}) => {
   return (
     <>
       <PanelHeader size="sm" />
-      <div style={{border:'1px solid red', marginBottom:'40px'}}>
-      <Row>
-                <Col md="10" className='text'>
+      <div >
+
+      <Row style={{justifyContent:'center', margin:'0 auto', alignItems:'center', marginBottom:'40px'}}>
+                <Col md="11" className='text'>
                     <Card>
                         <CardBody>
                             <Row>
@@ -230,6 +215,7 @@ const RegularTables = ({props}) => {
                         <CardFooter>
                             <Button className='btn-info' onClick={SearchButton}>검색</Button>
                             <Button className='btn-info' onClick={ResumetList}>조건 리셋</Button>
+                            <Button style={{float:'right'}} color="info" onClick={createToggle}>사용자 추가  <i class="fa fa-plus"></i></Button>
                         </CardFooter>
                     </Card>
                 </Col>
@@ -242,32 +228,34 @@ const RegularTables = ({props}) => {
           <NavLink
             className={({ active: activeTab === '1' })}
             onClick={() => { toggleTab('1'); }}
-            onChange={AdminType}
+            onChange={USERTYPE === 'A'}
           >
-            <NavLink onClick={AdminType}>관리자</NavLink>
+            관리자
+            {/* <NavLink className={((USERTYPE === 'A') ? 'active' : '')}>관리자</NavLink> */}
           </NavLink>
         </NavItem>
         <NavItem  xs={12}>
           <NavLink
-            className={({ active: activeTab === '2' })}
+            className={({ active: activeTab === '2' ? 'active' : ''})}
             onClick={() => { toggleTab('2')}}
-            onChange={MartType}
           >
-            <NavLink onClick={MartType}>마트관리자</NavLink>
+            마트관리자
+            {/* <NavLink className={((USERTYPE === 'M') ? 'active' : '')}>마트관리자</NavLink> */}
             
           </NavLink>
         </NavItem>
         <NavItem  xs={12}>
           <NavLink
-            className={({ active: activeTab === '3' })}
+            className={({ active: activeTab === '3' ? 'active' : ''})}
             onClick={() => { toggleTab('3'); }}
-            onChange={UserType}
+            // onChange={UserType}
           >
-            <NavLink onClick={UserType}>구직자</NavLink>
+            구직자
+            {/* <NavLink onClick={UserType}>구직자</NavLink> */}
             
           </NavLink>
         </NavItem>
-        <button onClick={createToggle}>추가</button>
+        
       </Nav>
 
       {/* 컨텐츠 시작 */}
@@ -292,14 +280,17 @@ const RegularTables = ({props}) => {
                             </tr>
                         </thead>
                         <tbody>
-                          <UserList posts={currentPosts}></UserList>
+                           <UserList Aposts={currentAPosts}  USERTYPE={USERTYPE === 'A'} ></UserList> 
                         </tbody>
                         
 
                         </Table>
                       </CardBody>
                       <CardFooter>
-                        
+                        <Paging postsPerPage={postsPerPage}
+                          totalPosts={Aposts.length}
+                          paginate={paginate}>
+                        </Paging>
                       </CardFooter>
                     </Card>
                 </Col>
@@ -327,12 +318,15 @@ const RegularTables = ({props}) => {
                               </tr>
                           </thead>
                           <tbody>
-                          <UserList posts={currentPosts}></UserList>
+                          <UserList Mposts={currentMPosts}  USERTYPE={'M'}></UserList>
                         </tbody>
                           </Table>
                       </CardBody>
                       <CardFooter>
-                        
+                        <Paging postsPerPage={postsPerPage}
+                          totalPosts={Mposts.length}
+                          paginate={paginate}>
+                        </Paging>
                       </CardFooter>
                     </Card>
                 </Col>
@@ -360,26 +354,26 @@ const RegularTables = ({props}) => {
                             </tr>
                         </thead>
                         <tbody>
-                          <UserList posts={currentPosts}></UserList>
+                          <UserList Uposts={currentUPosts} ></UserList>
                         </tbody>
                         </Table>
                     </CardBody>
                     <CardFooter>
-                  
+                      <Paging postsPerPage={postsPerPage}
+                        totalPosts={Uposts.length}
+                        paginate={paginate}>
+                      </Paging>
                       </CardFooter>
                     </Card>
                 </Col>
             </Row>
           </TabPane> 
-          <Paging postsPerPage={postsPerPage}
-                  totalPosts={posts.length}
-                  paginate={paginate}>
-                </Paging>
+          
       </TabContent>
     </div>
       {/* 생성모달 */}
       <Modal isOpen={createModal} toggle={createToggle} backdrop={false} >
-      <ModalHeader charCode="X" toggle={createToggle}>사용자 추가</ModalHeader>
+      <ModalHeader>사용자 추가</ModalHeader>
       <ModalBody>
         <FormGroup>
           <Label>아이디를 입력하세요</Label>

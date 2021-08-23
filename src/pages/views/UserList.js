@@ -22,10 +22,11 @@ import {
 } from "reactstrap";
 
 import axios from "axios";
+import moment from "moment";
 
 const thead = ["아이디", "구분", "생성일", "수정일"];
 
-const UserList = ({props, posts, loading}) => {
+const UserList = ({props, posts, loading, Aposts, Mposts, Uposts}) => {
 
 
     // users
@@ -140,20 +141,88 @@ const UserList = ({props, posts, loading}) => {
       }
       )} */}
 
-  {posts && posts.map((post) => {
-      
+
+         {Aposts && Aposts.map((post) => {
           return (
-              <tr key={post.SEQ} >
-          <td >{post.LOGINID}</td>
-          <td>{post.USERTYPE}</td>
-          <td>{post.CREATED}</td>
-          <td>{post.MODIFIED}</td>
-          <td><p onClick={(e) => editChange(post.SEQ)} style={{display:'block', cursor:'pointer'}}><i class="far fa-edit"></i></p></td>
-          <td><p onClick={(e) => removeUser(post.SEQ)} style={{display:'block', cursor:'pointer'}}><i className="far fa-trash-alt"></i></p></td>
-          </tr>
+            <tr key={post.SEQ} >
+              <td >{post.LOGINID}</td>
+              <td>{post.USERTYPE} 관리자</td>
+              <td>{moment(post.CREATED).format('YYYY-MM-DD hh:mm:ss')}</td>
+              <td>{moment(post.MODIFIED).format('YYYY-MM-DD hh:mm:ss')}</td>
+              <td><p onClick={(e) => editChange(post.SEQ)} style={{display:'block', cursor:'pointer'}}><i class="far fa-edit"></i></p></td>
+              <td><p onClick={(e) => removeUser(post.SEQ)} style={{display:'block', cursor:'pointer'}}><i className="far fa-trash-alt"></i></p></td>
+            </tr>
+          )
+          } 
+        )} 
+
+        {Mposts && Mposts.map((post) => {
+          return (
+            <tr key={post.SEQ} >
+              <td >{post.LOGINID}</td>
+              <td>{post.USERTYPE} 마트관리자</td>
+              <td>{moment(post.CREATED).format('YYYY-MM-DD hh:mm:ss')}</td>
+              <td>{moment(post.MODIFIED).format('YYYY-MM-DD hh:mm:ss')}</td>
+              <td><p onClick={(e) => editChange(post.SEQ)} style={{display:'block', cursor:'pointer'}}><i class="far fa-edit"></i></p></td>
+              <td><p onClick={(e) => removeUser(post.SEQ)} style={{display:'block', cursor:'pointer'}}><i className="far fa-trash-alt"></i></p></td>
+            </tr>
+          )
+          } 
+        )} 
+
+        {Uposts && Uposts.map((post) => {
+          return (
+            <tr key={post.SEQ} >
+              <td >{post.LOGINID}</td>
+              <td>{post.USERTYPE} 구직자</td>
+              <td>{moment(post.CREATED).format('YYYY-MM-DD hh:mm:ss')}</td>
+              <td>{moment(post.MODIFIED).format('YYYY-MM-DD hh:mm:ss')}</td>
+              <td><p onClick={(e) => editChange(post.SEQ)} style={{display:'block', cursor:'pointer'}}><i class="far fa-edit"></i></p></td>
+              <td><p onClick={(e) => removeUser(post.SEQ)} style={{display:'block', cursor:'pointer'}}><i className="far fa-trash-alt"></i></p></td>
+            </tr>
+          )
+          } 
+        )} 
+        
+
+  {/* {posts && posts.map((post) => {
+        if(USERTYPE === 'A') {
+          return (
+            <tr key={post.SEQ} >
+              <td >{post.LOGINID}</td>
+              <td>{post.USERTYPE}</td>
+              <td>{moment(post.CREATED).format('YYYY-MM-DD hh:mm:ss')}</td>
+              <td>{moment(post.MODIFIED).format('YYYY-MM-DD hh:mm:ss')}</td>
+              <td><p onClick={(e) => editChange(post.SEQ)} style={{display:'block', cursor:'pointer'}}><i class="far fa-edit"></i></p></td>
+              <td><p onClick={(e) => removeUser(post.SEQ)} style={{display:'block', cursor:'pointer'}}><i className="far fa-trash-alt"></i></p></td>
+            </tr>
           );
-          }
-      )}
+        } else if(USERTYPE === 'M') {
+          return (
+            <tr key={post.SEQ} >
+              <td >{post.LOGINID}</td>
+              <td>{post.USERTYPE}</td>
+              <td>{moment(post.CREATED).format('YYYY-MM-DD hh:mm:ss')}</td>
+              <td>{moment(post.MODIFIED).format('YYYY-MM-DD hh:mm:ss')}</td>
+              <td><p onClick={(e) => editChange(post.SEQ)} style={{display:'block', cursor:'pointer'}}><i class="far fa-edit"></i></p></td>
+              <td><p onClick={(e) => removeUser(post.SEQ)} style={{display:'block', cursor:'pointer'}}><i className="far fa-trash-alt"></i></p></td>
+            </tr>
+          );
+        } else if(USERTYPE === 'U') {
+          return (
+            <tr key={post.SEQ} >
+              <td >{post.LOGINID}</td>
+              <td>{post.USERTYPE}</td>
+              <td>{moment(post.CREATED).format('YYYY-MM-DD hh:mm:ss')}</td>
+              <td>{moment(post.MODIFIED).format('YYYY-MM-DD hh:mm:ss')}</td>
+              <td><p onClick={(e) => editChange(post.SEQ)} style={{display:'block', cursor:'pointer'}}><i class="far fa-edit"></i></p></td>
+              <td><p onClick={(e) => removeUser(post.SEQ)} style={{display:'block', cursor:'pointer'}}><i className="far fa-trash-alt"></i></p></td>
+            </tr>
+          );
+        }
+        }
+          
+      )} */}
 
 
 

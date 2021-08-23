@@ -4,6 +4,7 @@ import { Button, Card, CardHeader,Form, CardBody, UncontrolledTooltip,Modal,Moda
   ModalFooter, CardTitle, Table, Row, Col, CardFooter, Label, InputGroup, FormGroup, Input } from "reactstrap";
 import Select from "react-select";
 import axios from "axios";
+import moment from "moment";
 
 const thead = ["제목", "내용", "작성일", "수정일"];
 
@@ -16,7 +17,7 @@ function MartList({ posts, loading, props }) {
     // 로고 모달
     const [imgModal, setImgModal] = useState(false);
     const imgToggle = () => setImgModal(!imgModal);
-
+    const [refresh, setRefresh] = useState(0);
     const [inputs, setInputs] = useState([{
         SEQ:'',
         NAME: '',
@@ -57,6 +58,92 @@ function MartList({ posts, loading, props }) {
         }
         reader.readAsDataURL(file);
       }
+
+      // const handleFileChange = (e) => {
+      //   console.log('click event')
+      //   // event.target.profile_img.files[0]
+      //   const uploadLogo = 'http://localhost:3333/api/files/uploadSingle';
+      //   const formData = new FormData();
+      //   // formData.append('SEQ', inputs.SEQ);
+      //   formData.append('location', 'MART');
+      //   formData.append('LOGOFILE', inputs.LOGOFILE);
+      //   const config = {
+      //     headers: {
+      //       "content-type": "multipart/form-data"
+      //     }
+      //   };
+      //   axios.post(uploadLogo,  formData, config)
+      //     // .then((res) => {
+      //     //   if(res.data.data.result === 'success') {
+      //     //     logoImage(res.data.data.filename)
+      //     //     axios.post('http://localhost:3333/api/mart/logo', {SEQ:SEQ, LOGOFILE:logoImage })
+      //     //       .then((res) => {
+      //     //         console.log('res',res)
+      //     //         alert('로고 수정 완료')
+      //     //       })
+      //     //   }
+      //     // })
+      //   console.log('LOGOFILE',LOGOFILE);
+      // }
+
+
+      // 로고 수정 ndb
+      function addCustomer() {
+        const url = 'http://localhost:3333/api/files/uploadSingle';
+        const formData = new FormData();
+        formData.append('location', 'martlogo');
+        formData.append('LOGOFILE', inputs.LOGOFILE);
+        const config = {
+            headers: {
+                'content-type' : 'multipart/form-data'
+            }
+        }
+        return axios.post(url, formData, config)
+      }
+      function addLogo() {
+        const url = 'http://localhost:3333/api/mart/logo';
+        const config = {
+          headers: {
+              'content-type' : 'multipart/form-data'
+          }
+      }
+      return axios.post(url, {SEQ:SEQ, LOGOFILE:LOGOFILE}, config)
+      }
+
+    function handleFormSubmit(e) {
+        e.preventDefault()
+        addCustomer()
+        // addLogo()
+        .then((res) => {
+          return axios.post('http://localhost:3333/api/mart/logo', {SEQ:SEQ, LOGOFILE:LOGOFILE})
+              .then((res) => {
+                setInputs(res.data.data);
+                // setInputs(res.data.data.LOGOFILE);
+                console.log('res', res)
+                console.log('로고 수정 완료')
+              })
+          
+            // console.log('form-res', res)
+        })
+        .catch(err => console.log(err));
+        setInputs({
+            LOGOFILE: null,
+            location: 'martlogo',
+            fileName: '',
+        })
+    }
+
+    function handleFileChange(e) {
+        const {name, value} = e.target;
+        setInputs({
+            ...inputs,
+            [name]: e.target.files[0],
+            [fileName]: value
+        })
+        
+        console.log('name, value',name, value);
+        console.log('e.target.file',e.target.files[0])
+    }
   
   
       // 수정 모달 리셋
@@ -64,6 +151,7 @@ function MartList({ posts, loading, props }) {
           editToggle();
           setInputs('');
           }
+      // 수정 모달 GET
       const editChange = (SEQ) => {
           editToggle();
           const urlGet = `http://localhost:3333/api/mart/get`;
@@ -114,8 +202,12 @@ function MartList({ posts, loading, props }) {
       }
   
       // 마트 로고
-      const imageChage = () =>{
+      const imageChage = (SEQ) =>{
           imgToggle();
+          axios.post('http://localhost:3333/api/mart/get', {SEQ:SEQ})
+            .then((res) => {
+              setInputs(res.data.data);
+            })
       }
       // 마트 로고1
       const inputChange = (e) => {
@@ -140,13 +232,13 @@ function MartList({ posts, loading, props }) {
           {posts.map((post) => (
             <tr key={post.SEQ} >
                 <td>{post.NAME}</td>
-                <td><img src={post.LOGOFILE} alt={LOGOFILE} name={LOGOFILE} />  </td>
+                <td><img src={'http://localhost:3333/api/files/get/'+post.LOGOFILE} alt={LOGOFILE} name={LOGOFILE} />  </td>
                 <td>{post.REGNO}</td>
                 <td>{post.ADDRESS}</td>
                 <td>{post.CONTACT}</td>
-                <td>{post.CREATED}</td>
-                <td>{post.MODIFIED}</td>
-                <td><p onClick={(e) => editChange(post.SEQ)} style={{display:'block', cursor:'pointer'}}><i class="far fa-edit"></i></p></td>
+                <td>{moment(post.MODIFIED).format("YYYY-MM-DD hh:mm:ss")}</td>
+                <td>{moment(post.MODIFIED).format("YYYY-MM-DD hh:mm:ss")}</td>
+                <td><p onClick={(e) => editChange(post.SEQ) } style={{display:'block', cursor:'pointer'}}><i class="far fa-edit"></i></p></td>
                 <td><p onClick={(e) => imageChage(post.SEQ)} style={{display:'block', cursor:'pointer'}}><i class="far fa-image"></i></p></td>
                 <td><p  onClick={(e) => removeChange(post.SEQ)} style={{display:'block', cursor:'pointer'}}><i className="far fa-trash-alt"></i></p></td>
             </tr>
@@ -238,26 +330,24 @@ function MartList({ posts, loading, props }) {
             <ModalBody>
                 <Row>
                     <Col md="12">
+                      <Input type='hidden' value={SEQ} name='SEQ' onChange={(e) => setInputs(e.target.value)} />
                       {/* <form onSubmit={handleFormSubmit} encType='multipart/form-data'>
                         <input onChange={handleFileOnChange} type="file" name="LOGOFILE" accept='image/jpg, image/png, image/jpeg' file={LOGOFILE} value={fileName}  />
                         <Button onClick={handleFileChange} type="submit">추가하기</Button>
                         {profile_preview}
                         </form> */}
 
-                        <input accept='image/*' type="file" file={LOGOFILE} value={fileName} name='LOGOFILE' onChange={handleFileOnChange} />
-                        <Button  type="submit">로고수정</Button>
-                        {profile_preview}
+                        {/* <input accept='image/*' type="file" file={LOGOFILE} value={fileName} name='LOGOFILE' onChange={handleFileOnChange} />
+                        <Button onClick={handleFileChange} type="submit">로고수정</Button>
+                        {profile_preview} */}
 
-                        {/* <input  accept="image/*" id="raised-button-file" type="file" file={LOGOFILE} value={fileName} onChange={handleFileChange}/><br/>
-                        <label htmlFor="raised-button-file">
-                            <Button variant="contained" color="primary" component="span" name="file">
-                                {posts.fileName === '' ? "프로필 이미지 선택" : posts.fileName}
-                            </Button>
-                        </label> */}
+                        <input  accept="image/*" id="raised-button-file" name='LOGOFILE' type="file" file={LOGOFILE} value={fileName} onChange={handleFileChange}/><br/>
+
                     </Col>
                   </Row>
             </ModalBody>
             <ModalFooter>
+            <Button color="secondary"  onClick={handleFormSubmit}>수정</Button>
             <Button color="secondary"  onClick={logoClose}>닫기</Button>
             </ModalFooter>
         </Modal>
