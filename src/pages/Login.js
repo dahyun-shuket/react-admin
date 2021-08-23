@@ -27,9 +27,9 @@ function LoginPage(props) {
             alert("아이디에 특수문자는 사용할 수 없습니다.");
             return;
         } else {
-            let url = "http://localhost:3333/api/users/login";
+            let url = "http://localhost:3000/api/users/login";
             axios
-                .post(url, { LOGINID: LOGINID, PWD: PWD })
+                .post(url, { userId: LOGINID, password: PWD })
                 .then((response) => {
                     console.log(response);
                     if (response.data.result === "success") {
