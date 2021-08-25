@@ -17,26 +17,26 @@ const ResumeView = () => {
 
     const ResumeDetail = async () => {
         setLoading(true);
-        axios
+        await axios
             .post("http://localhost:3000/api/resume/get", {
                 seq: id,
             })
             .then((response) => {
                 setResumeDetailData(response.data.data);
-                console.log([response.data.data]);
+                // console.log([response.data.data]);
                 setLoading(false);
             });
     };
 
     const CareerList = async () => {
         setLoading(true);
-        axios
+        await axios
             .post("http://localhost:3000/api/resume/listCareer", {
                 resumeSeq: id,
             })
             .then((response) => {
                 setCareerListData(response.data.data);
-                console.log([response.data.data]);
+                // console.log([response.data.data]);
                 setLoading(false);
             });
     };
@@ -54,14 +54,32 @@ const ResumeView = () => {
                         if (json.result == "success") window.location.replace("/admin/resume");
                         else alert("이력서를 게시 중단하는 도중에 오류가 발생했습니다.");
                     })
-                    .fail(function (sender, message, details) {
+                    .fail(function () {
                         alert("이력서를 게시 중단하는 도중에 오류가 발생했습니다.");
                     });
             }
         }
         return false;
     };
-
+    const ButtonCertificate = async () => {
+        await axios
+            .post(`http://localhost:3000/api/resume/certificate`,{
+                seq:id
+            })
+            .then(() => {
+                window.location.reload()
+            });
+    };
+    const ButtonCertificateCancel = async () => {
+        await axios
+            .post(`http://localhost:3000/api/resume/clearCertificate`,{
+                seq:id
+            })
+            .then(() => {
+                window.location.reload()
+            });
+    };
+    
     useEffect(() => {
         ResumeDetail();
         CareerList();
@@ -114,7 +132,7 @@ const ResumeView = () => {
                                             <CardBody>
                                                 <Row>
                                                     <Col md={6}>
-                                                        <p>{resumeDetailData.INTRODUCE}</p>
+                                                        <p>{resumeDetailData.SUBJECT}</p>
                                                     </Col>
                                                     <Col md={6}>
                                                         <div className="widget-bg-color-icon card-box">
@@ -122,9 +140,15 @@ const ResumeView = () => {
                                                                 <i className="fa fa-check"></i>
                                                             </div>
                                                             <div className="text-center">
-                                                                <h3 className="text-dark"><b>CERTIFICATED</b></h3>                                                                
-                                                                <p className="text-muted">{moment(resumeDetailData.CERTIFICATEDATE).format('YYYY-MM-DD')}</p>
-                                                                <p><Button type="button" className="btn btn-warning waves-effect w-md waves-light m-t-5" id="button-certificate-cancel">검증 취소</Button></p>
+                                                                <h3 className="text-dark"><b> {(resumeDetailData.CERTIFICATEDATE)? 'CERTIFICATED' : 'WAIT'}</b></h3>                                                                
+                                                                <p className="text-muted">{(resumeDetailData.CERTIFICATEDATE) 
+                                                                ? moment(resumeDetailData.CERTIFICATEDATE).format('YYYY-MM-DD') 
+                                                                : '아직 검증되지 않았습니다'}</p>
+                                                                {
+                                                                    (resumeDetailData.CERTIFICATEDATE) 
+                                                                    ? <p><Button type="button" className="btn btn-warning waves-effect w-md waves-light m-t-5" onClick={ButtonCertificateCancel}>검증 취소</Button></p> 
+                                                                    : <p><Button type="button" className="btn btn-warning waves-effect w-md waves-light m-t-5" onClick={ButtonCertificate}>검증 완료</Button></p>
+                                                                }
                                                             </div>
                                                         </div>
                                                     </Col>
@@ -157,11 +181,17 @@ const ResumeView = () => {
                                                 </Row>
                                                 <Row>
                                                     <Col md={12}>
-                                                    <h5 class="text-primary m-b-10">
+                                                    <h5 className="text-primary m-b-10">
                                                         <a href={'http://localhost:3000/api/files/get/' + resumeDetailData.CAREERCERTIFICATE} target="_blank">  
                                                         {/* <i class="fa fa-file-text-o"></i>  아이콘자리*/}
                                                         경력 인증문서 다운받기</a>
                                                     </h5>
+                                                    </Col>
+                                                    <Col md={12}>
+                                                        <h5>
+                                                            자기소개
+                                                        </h5>
+                                                        <p>{resumeDetailData.INTRODUCE}</p>
                                                     </Col>
                                                 </Row>
                                             </CardBody>
@@ -222,7 +252,7 @@ const ResumeView = () => {
                                     <span class="m-l-15">{resumeDetailData.GENDER}</span>
                                 </p>
                             </div>
-
+                            <br></br>
                             <div class="text-left m-t-40">
                                 <p class="text-muted font-13">
                                     <strong>우편번호 :</strong>

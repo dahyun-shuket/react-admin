@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import ReactDOM from "react-dom";
-import { BrowserRouter, Route, Switch, Redirect, NavLink } from "react-router-dom";
+import { BrowserRouter,  Switch } from "react-router-dom";
 import axios from 'axios';
 
 import "bootstrap/dist/css/bootstrap.css";
@@ -32,7 +31,7 @@ export default function App(props) {
     return <div className="content">Checking Authentication...</div>
   }
 
-    axios.get(`http://localhost:3333/verifyToken?token=${token}`).then(response => {
+    axios.get(`http://localhost:3000/verifyToken?token=${token}`).then(response => {
       setUserSession(response.data.token, response.data.user);
       setAuthLoading(false);
     }).catch(error => {

@@ -1,13 +1,12 @@
 import React from "react";
 import moment from "moment";
 
-function CareerList(careerListData) {
-
+function ResumeapplyLists(resumeLists) {
+    console.log("resumeListsresumeListsresumeLists"+JSON.stringify(resumeLists))
     return (
 
         <>
-            {(careerListData.careerListData)
-            ?careerListData.careerListData.map((data) => {
+            {resumeLists.resumeLists.map((data) => {
                 return (
                     <tr key={data.SEQ}>
                         <td>{data.COMPANY}</td>
@@ -18,12 +17,10 @@ function CareerList(careerListData) {
                         <td>{data.CHARGE}</td>
                         <td>{data.SALARY}</td>
                     </tr>
-                )
-            })
-            : ''
-            }
+                );
+            })}
         </>
     );
 }
 
-export default CareerList;
+export default ResumeapplyLists;

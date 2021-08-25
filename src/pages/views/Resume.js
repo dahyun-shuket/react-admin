@@ -1,11 +1,9 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import ResumeLists from "components/ResumeList";
-import { Button, Card, CardHeader, CardBody, UncontrolledTooltip, CardTitle, Table, Row, Col, CardFooter, Label, InputGroup, FormGroup, Input } from "reactstrap";
+import { Button, Card, CardHeader, CardBody, CardTitle, Table, Row, Col, CardFooter, Label, InputGroup, FormGroup, Input } from "reactstrap";
 import Select from "react-select";
-import { Link } from "react-router-dom";
 import Paging from "components/Paging";
-import { Route } from "react-router";
 
 const Resume = () => {
     const [resumeLists, setResumeLists] = useState([]);
@@ -30,13 +28,6 @@ const Resume = () => {
             setLoading(false);
         });
     };
-    // const NameChange = (e) => {
-    //     setName(e.target.value);
-    // };
-
-    // const CertificateChange = (e) => {
-    //     setCertificate(e.target.value);
-    // };
 
     const onChange = (value) => { 
         // 콜백 함수 정의 
@@ -80,6 +71,9 @@ const Resume = () => {
             setLoading(false);
         });
     };
+    const ResetButton = () => {
+        window.location.replace("/admin/resume");
+    };
 
     useEffect(() => {
         ResumetList();
@@ -87,7 +81,7 @@ const Resume = () => {
     // Get current posts
     const indexOfLastPost = currentPage * postsPerPage;
     const indexOfFirstPost = indexOfLastPost - postsPerPage;
-    const currentPosts = resumeLists.slice(indexOfFirstPost, indexOfLastPost);
+    const currentPosts = (resumeLists != null) ? resumeLists.slice(indexOfFirstPost, indexOfLastPost) : [];
 
     // Change page
     const paginate = (pageNumber) => setCurrentPage(pageNumber);
@@ -278,7 +272,7 @@ const Resume = () => {
                         </CardBody>
                         <CardFooter>
                             <Button className='btn-info' onClick={SearchButton}>검색</Button>
-                            <Button className='btn-info' onclick={ResumetList}>조건 리셋</Button>
+                            <Button className='btn-info' onClick={ResetButton}>조건 리셋</Button>
                         </CardFooter>
                     </Card>
                 </Col>
@@ -294,10 +288,10 @@ const Resume = () => {
                                         <th className="text-center">연락처</th>
                                         <th className="text-center">나이</th>
                                         <th className="text-center">성별</th>
-                                        <th className="text-right">희망지역</th>
-                                        <th className="text-right">직종</th>
-                                        <th className="text-right">인증</th>
-                                        <th className="text-right">수정일</th>
+                                        <th className="text-center">희망지역</th>
+                                        <th className="text-center">직종</th>
+                                        <th className="text-center">인증</th>
+                                        <th className="text-center">수정일</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -305,11 +299,10 @@ const Resume = () => {
                                 </tbody>
                             </Table>
                         </CardBody>
-                        {/* <CardFooter></CardFooter> */}
                     </Card>
                 </Col>
                 <Paging postsPerPage={postsPerPage}
-                        totalPosts={resumeLists.length}
+                        totalPosts={(resumeLists) ? resumeLists.length : 0}
                         paginate={paginate}>
                 </Paging>
             </Row>
