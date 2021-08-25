@@ -1,6 +1,6 @@
 import Dashboard from "./pages/views/Dashboard";
-import UserPage from "./pages/views/UserPage.js";
-import TestPage from "./pages/views/Test.js";
+// import UserPage from "./pages/views/UserPage.js";
+// import TestPage from "./pages/views/Test.js";
 import Recruit from "./pages/views/Recruit.js";
 import Resume from "./pages/views/Resume.js"
 import Notice from './pages/views/Notice';
@@ -39,20 +39,20 @@ var dashRoutes = [
     component: Mart,
     layout: "/admin",
   },
-  {
-    path: "/user-page",
-    name: "User Profile",
-    icon: "users_single-02",
-    component: UserPage,
-    layout: "/admin",
-  },
-  {
-    path: "/test-page",
-    name: "Test Page",
-    icon: "users_single-02",
-    component: TestPage,
-    layout: "/admin",
-  },
+  // {
+  //   path: "/user-page",
+  //   name: "User Profile",
+  //   icon: "users_single-02",
+  //   component: UserPage,
+  //   layout: "/admin",
+  // },
+  // {
+  //   path: "/test-page",
+  //   name: "Test Page",
+  //   icon: "users_single-02",
+  //   component: TestPage,
+  //   layout: "/admin",
+  // },
   {
     path: "/recruit",
     name: "공고 관리",
