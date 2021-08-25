@@ -1,14 +1,11 @@
 import Dashboard from "./pages/views/Dashboard";
-// import Notifications from "views/Notifications.js";
-// import Icons from "views/Icons.js";
-// import Typography from "views/Typography.js";
-// import TableList from "views/TableList.js";
-// import Maps from "views/Maps.js";
-// import Upgrade from "views/Upgrade.js";
 import UserPage from "./pages/views/UserPage.js";
 import TestPage from "./pages/views/Test.js";
 import Recruit from "./pages/views/Recruit.js";
 import Resume from "./pages/views/Resume.js"
+import Notice from './pages/views/Notice';
+import Users from './pages/views/Users.js';
+import Mart from './pages/views/Mart.js';
 
 
 // import LoginPage from "views/Login";
@@ -21,35 +18,27 @@ var dashRoutes = [
     component: Dashboard,
     layout: "/admin",
   },
-  // {
-  //   path: "login",
-  //   name: "login",
-  //   icon: "design_app",
-  //   component: LoginPage,
-  //   exact:true,
-  //   layout: "/",
-  // },
-  // {
-  //   path: "/icons",
-  //   name: "Icons",
-  //   icon: "design_image",
-  //   component: Icons,
-  //   layout: "/admin",
-  // },
-  // {
-  //   path: "/maps",
-  //   name: "Maps",
-  //   icon: "location_map-big",
-  //   component: Maps,
-  //   layout: "/admin",
-  // },
-  // {
-  //   path: "/notifications",
-  //   name: "Notifications",
-  //   icon: "ui-1_bell-53",
-  //   component: Notifications,
-  //   layout: "/admin",
-  // },
+  {
+    path: "/notice",
+    name: "공지사항",
+    icon: "media-1_album",
+    component: Notice,
+    layout: "/admin",
+  },
+  {
+    path: "/users",
+    name: "유저관리",
+    icon: "users_circle-08",
+    component: Users,
+    layout: "/admin",
+  },
+  {
+    path: "/mart",
+    name: "마트관리",
+    icon: "design_app",
+    component: Mart,
+    layout: "/admin",
+  },
   {
     path: "/user-page",
     name: "User Profile",
