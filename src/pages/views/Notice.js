@@ -1,7 +1,7 @@
-import React, {useEffect, useState, useRef, useMemo} from "react";
-import { Button, Card, CardHeader, CardBody, UncontrolledTooltip,Modal,ModalHeader,ModalBody,
+import React, {useEffect, useState} from "react";
+import { Button, Card, CardHeader, CardBody,Modal,ModalHeader,ModalBody,
   ModalFooter, CardTitle, Table, Row, Col, CardFooter, Label, InputGroup, FormGroup, Input } from "reactstrap";
-import Select from "react-select";
+// import Select from "react-select";
 
 import PanelHeader from "../../templates/PanelHeader";
 
@@ -11,7 +11,7 @@ import axios from "axios";
 
 import Paging from "../../components/Paging";
 import NoticeList from "./NoticeList";
-import CuntryDetailTest from "../../components/Customer";
+// import CuntryDetailTest from "../../components/Customer";
 
 
 
@@ -19,7 +19,7 @@ const thead = ["제목", "내용", "작성일", "수정일"];
 const urlList = 'http://localhost:3000/api/notice/list';
 
 
-const NoticeTables = (props) => {
+const NoticeTables = ({props}) => {
 
     const [posts, setPosts] = useState([]);
     const [refresh, setRefresh] = useState(0);

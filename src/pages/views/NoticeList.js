@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import { Link } from "react-router-dom";
 import { Button, Card, CardHeader, CardBody, UncontrolledTooltip,Modal,ModalHeader,ModalBody,
   ModalFooter, CardTitle, Table, Row, Col, CardFooter, Label, InputGroup, FormGroup, Input } from "reactstrap";
@@ -11,6 +11,8 @@ const thead = ["제목", "내용", "작성일", "수정일"];
 
 function NoticeList({ posts, loading, props }) {
 
+
+
   const [SUBJECT, setSUBJECT] = useState('');
   const [CONTENT, setCONTENT] = useState('');
   const [SEQ, setSEQ] = useState('');
@@ -20,6 +22,7 @@ function NoticeList({ posts, loading, props }) {
   //수정모달
   const [editModal, setEditModal] = useState(false);
   const editToggle = () => setEditModal(!editModal);
+
   
   // 클릭 보기
   const viewClick = (SEQ) => {

@@ -146,7 +146,9 @@ const UserList = ({props, posts, loading, Aposts, Mposts, Uposts}) => {
           return (
             <tr key={post.SEQ} >
               <td >{post.LOGINID}</td>
+
               <td>{post.USERTYPE} 관리자</td>
+              
               <td>{moment(post.CREATED).format('YYYY-MM-DD hh:mm:ss')}</td>
               <td>{moment(post.MODIFIED).format('YYYY-MM-DD hh:mm:ss')}</td>
               <td><p onClick={(e) => editChange(post.SEQ)} style={{display:'block', cursor:'pointer'}}><i class="far fa-edit"></i></p></td>

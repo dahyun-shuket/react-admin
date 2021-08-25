@@ -49,6 +49,15 @@ const RegularTables = ({props}) => {
 
     useEffect(() => {
       setLoading(true);
+      axios.post(url)
+        .then((res) => {
+          setPosts(res.data.data.list)
+          setLoading(false);
+        })
+    }, [])
+
+    useEffect(() => {
+      setLoading(true);
       axios.post(url+`?usertype=${USERTYPE}`, {USERTYPE:'A'})
         .then((res) => {
           setAPosts(res.data.data.list)
@@ -73,8 +82,8 @@ const RegularTables = ({props}) => {
     const ResumetList = async () => {
       setLoading(true);
       axios.post("http://localhost:3333/api/users/list")
-          .then((response) => {
-          setPosts(response.data.data.list);
+          .then((res) => {
+          setPosts(res.data.data.list);
           setLoading(false);
           setRefresh(oldkey => oldkey +1);
       });
@@ -93,12 +102,13 @@ const RegularTables = ({props}) => {
     // 검색 버튼
     const SearchButton = () => {
       setLoading(true);
-      setLOGINID('');
+      // setLOGINID('');
       axios.post("http://localhost:3333/api/users/list",{
           LOGINID: LOGINID,
-          USERTYPE: getRegions()
+          // USERTYPE: getRegions()
       })
         .then((res) => {
+          setPosts(res.data.data.list)
           setAPosts(res.data.data.list);
           setMPosts(res.data.data.list);
           setUPosts(res.data.data.list);
@@ -180,8 +190,8 @@ const RegularTables = ({props}) => {
                     <Card>
                         <CardBody>
                             <Row>
-                                <Label sm="2">유저 구분</Label>
-                                <Col className="checkbox-radios" sm={10}>
+                                {/*<Label sm="2">유저 구분</Label>
+                                 <Col className="checkbox-radios" sm={10}>
                                     <FormGroup check>
                                         <Label check>
                                             <Input type="checkbox" name="USERTYPE" value='A' />
@@ -199,7 +209,7 @@ const RegularTables = ({props}) => {
                                             구직자
                                         </Label>
                                     </FormGroup>
-                                </Col>
+                                </Col> */}
                                 <Label md="2">아이디</Label>
                                 <Col md='10'>
                                     <InputGroup className="no-border">

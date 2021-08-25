@@ -8,7 +8,7 @@ import { Card, CardBody, CardHeader, CardTitle, CardFooter, InputGroup, Form, Ta
   import Paging from "../../components/Paging";
 
   const thead = ["마트명", "마트로고","사업자번호", "주소","연락처", "작성일", "수정일"];
-  let urlList = `http://localhost:3333/api/mart/list`;
+  let urlList = `http://localhost:3000/api/mart/list`;
 
 const Mart = (props) => {
 
@@ -44,7 +44,7 @@ const Mart = (props) => {
       setInterval(() => {
         setLoading((prevProgress) => (prevProgress >= 100 ? 0 : prevProgress + 1));
       }, 20);
-      const result = await axios.post('http://localhost:3333/api/mart/list');
+      const result = await axios.post('http://localhost:3000/api/mart/list');
       setPosts(result.data.data.list);
     }
 
@@ -54,7 +54,7 @@ const Mart = (props) => {
     // 검색하기
     const SearchButton = async () => {
       setLoading(true);
-      axios.post("http://localhost:3333/api/mart/list",{
+      axios.post("http://localhost:3000/api/mart/list",{
           NAME: NAME,
       })
           .then((response) => {
@@ -66,7 +66,7 @@ const Mart = (props) => {
   // 생성 추가
   const createChange = () => {
     toggle();
-    axios.post('http://localhost:3333/api/mart/create', {NAME: NAME, ADDRESS:ADDRESS})
+    axios.post('http://localhost:3000/api/mart/create', {NAME: NAME, ADDRESS:ADDRESS})
       .then((data) => {
         console.log('data:  ', data)
         if(data.data.result === 'success') {
@@ -90,7 +90,7 @@ const Mart = (props) => {
 }
 const MartSearchReset = () => {
   setLoading(true);
-  axios.post("http://localhost:3333/api/mart/list",{
+  axios.post("http://localhost:3000/api/mart/list",{
       NAME: NAME
   })
     .then((res) => {

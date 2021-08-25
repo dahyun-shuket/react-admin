@@ -1,24 +1,24 @@
 import React, {useState} from "react";
-import { Link } from "react-router-dom";
-import { Button, Card, CardHeader,Form, CardBody, UncontrolledTooltip,Modal,ModalHeader,ModalBody,
-  ModalFooter, CardTitle, Table, Row, Col, CardFooter, Label, InputGroup, FormGroup, Input } from "reactstrap";
-import Select from "react-select";
+// import { Link } from "react-router-dom";
+import { Button, Form, Modal,ModalHeader,ModalBody,
+  ModalFooter,  Row, Col,  FormGroup, Input } from "reactstrap";
+// import Select from "react-select";
 import axios from "axios";
 import moment from "moment";
 
-const thead = ["제목", "내용", "작성일", "수정일"];
+// const thead = ["제목", "내용", "작성일", "수정일"];
 
 
 function MartList({ posts, loading, props }) {
-
     //수정모달
     const [editModal, setEditModal] = useState(false);
     const editToggle = () => setEditModal(!editModal);
     // 로고 모달
     const [imgModal, setImgModal] = useState(false);
     const imgToggle = () => setImgModal(!imgModal);
-    const [refresh, setRefresh] = useState(0);
+    // const [refresh, setRefresh] = useState(0);
     const [inputs, setInputs] = useState([{
+      seq:'',
         SEQ:'',
         NAME: '',
         LOGOFILE: null,
@@ -30,17 +30,19 @@ function MartList({ posts, loading, props }) {
         HRONAME: '',
         HRORANK: '',
         HROCONTACT: '',
-        fileName: '',
         previewURL:'',
         logoImage: null,
         location: '',
+        uploadFile:null,
+        fileName:'',
     }]);
-    const {SEQ, NAME, LOGOFILE, REGNO, ADDRESS, CONTACT, POSTCODE, ADDRESSEXTRA, HRONAME, HRORANK, HROCONTACT, fileName, previewURL, logoImage, location } = inputs;
+    const {SEQ, NAME, LOGOFILE, REGNO, ADDRESS, CONTACT, POSTCODE, ADDRESSEXTRA, HRONAME, HRORANK, HROCONTACT,  previewURL, logoImage, location, uploadFile, seq, fileName } = inputs;
     const onChange = (e) => {
         const { value, name } = e.target;
         setInputs({
             ...inputs,
-            [name]: value
+            [name]: value,
+            // [fileName]: value
         })
     }
 
@@ -65,7 +67,7 @@ function MartList({ posts, loading, props }) {
       //   const uploadLogo = 'http://localhost:3333/api/files/uploadSingle';
       //   const formData = new FormData();
       //   // formData.append('SEQ', inputs.SEQ);
-      //   formData.append('location', 'MART');
+      //   formData.append('LOCATION', 'MART');
       //   formData.append('LOGOFILE', inputs.LOGOFILE);
       //   const config = {
       //     headers: {
@@ -89,50 +91,66 @@ function MartList({ posts, loading, props }) {
 
       // 로고 수정 ndb
       function addCustomer() {
-        const url = 'http://localhost:3333/api/files/uploadSingle';
+        const url = 'http://localhost:3000/api/files/uploadSingle';
         const formData = new FormData();
         formData.append('location', 'martlogo');
-        formData.append('LOGOFILE', inputs.LOGOFILE);
+        formData.append('uploadFile', inputs.uploadFile);
+        // formData.append('fileName', inputs.uploadFile.value);
         const config = {
             headers: {
                 'content-type' : 'multipart/form-data'
             }
         }
+        console.log(formData);
         return axios.post(url, formData, config)
       }
-      function addLogo() {
-        const url = 'http://localhost:3333/api/mart/logo';
-        const config = {
-          headers: {
-              'content-type' : 'multipart/form-data'
-          }
-      }
-      return axios.post(url, {SEQ:SEQ, LOGOFILE:LOGOFILE}, config)
-      }
-
+      
+    
     function handleFormSubmit(e) {
+
         e.preventDefault()
         addCustomer()
         // addLogo()
         .then((res) => {
-          return axios.post('http://localhost:3333/api/mart/logo', {SEQ:SEQ, LOGOFILE:LOGOFILE})
+          // setInputs(res.data.data.fileName)
+          // console.log(logoImage)
+          // console.log("res.data.filename ? ? ? " + JSON.stringify(res.data.data.filename))
+          // let fileName = inputs.uploadFile.name;
+
+          const config = {
+            headers: {
+                'Content-type': 'application/json'
+            }
+          }
+          console.log("res.data.data ? ? ? ? ? ? ? ?@@@@@@@" + JSON.stringify(res.data.data))
+           axios.post('http://localhost:3000/api/mart/updateLogo', 
+           {
+             SEQ:SEQ, 
+             LOGOFILE: 'martlogo/'+res.data.data.filename,
+            //  LOCATION: 'martlogo'
+           }
+           , config
+           )
+
               .then((res) => {
                 setInputs(res.data.data);
-                // setInputs(res.data.data.LOGOFILE);
-                console.log('res', res)
+
+                console.log('logo', res)
                 console.log('로고 수정 완료')
+                logoClose();
+                window.location.reload();
               })
-          
-            // console.log('form-res', res)
+
+            console.log('uploadSingle', res)
         })
         .catch(err => console.log(err));
         setInputs({
-            LOGOFILE: null,
+            uploadFile: null,
             location: 'martlogo',
-            fileName: '',
+
         })
     }
-
+    
     function handleFileChange(e) {
         const {name, value} = e.target;
         setInputs({
@@ -140,6 +158,7 @@ function MartList({ posts, loading, props }) {
             [name]: e.target.files[0],
             [fileName]: value
         })
+        console.log(fileName);
         
         console.log('name, value',name, value);
         console.log('e.target.file',e.target.files[0])
@@ -152,10 +171,10 @@ function MartList({ posts, loading, props }) {
           setInputs('');
           }
       // 수정 모달 GET
-      const editChange = (SEQ) => {
+      const editChange = (seq) => {
           editToggle();
-          const urlGet = `http://localhost:3333/api/mart/get`;
-          axios.post(urlGet, {SEQ:SEQ})
+          const urlGet = `http://localhost:3000/api/mart/get`;
+          axios.post(urlGet, {SEQ:seq})
           .then((res) => {
               console.log('get:  ', res.data.data)
               setInputs(res.data.data);
@@ -165,16 +184,16 @@ function MartList({ posts, loading, props }) {
       // 마트 수정 update
       const editTable = (data) => {
           editToggle();
-          const urlEdit = `http://localhost:3333/api/mart/update`;
+          const urlEdit = `http://localhost:3000/api/mart/update`;
           
           axios.post(urlEdit, {SEQ:SEQ, NAME:NAME, REGNO:REGNO, ADDRESS:ADDRESS, CONTACT:CONTACT, POSTCODE:POSTCODE, ADDRESSEXTRA:ADDRESSEXTRA, HRONAME:HRONAME, HRORANK:HRORANK, HROCONTACT:HROCONTACT})
             .then((res) => {
               console.log('updata:  ',res);
-              if(res.data.result === 'success') {
+              if(res.data.martInfo === 'success') {
                 alert('수정 성공')
                 // 새로고침
                 window.location.reload();
-              } else if(res.data.result === 'fail') {
+              } else if(res.data.martInfo === 'fail') {
                 alert('수정 실패')
                 return;
               }
@@ -187,14 +206,14 @@ function MartList({ posts, loading, props }) {
   
       // 마트 삭제
       const removeChange = (SEQ) => {
-          const urlRemove = 'http://localhost:3333/api/mart/remove';
+          const urlRemove = 'http://localhost:3000/api/mart/remove';
           if(window.confirm('삭제 하시겠습니까?')) {
               axios.post(urlRemove, {SEQ:SEQ})
                   .then((res) => {
-                      if(res.data.data.result === 'success') {
-                          console.log('성공 result', res.data.data.result)
+                      if(res.data.result === 'success') {
+                          console.log('성공 result', res.data.result)
                           alert('마트 삭제 성공')
-                      } else if(res.data.data.result === 'fail') {
+                      } else if(res.data.result === 'fail') {
                           alert('마트 삭제 실패')
                       }
                   })
@@ -204,7 +223,7 @@ function MartList({ posts, loading, props }) {
       // 마트 로고
       const imageChage = (SEQ) =>{
           imgToggle();
-          axios.post('http://localhost:3333/api/mart/get', {SEQ:SEQ})
+          axios.post('http://localhost:3000/api/mart/get', {SEQ:SEQ})
             .then((res) => {
               setInputs(res.data.data);
             })
@@ -232,7 +251,7 @@ function MartList({ posts, loading, props }) {
           {posts.map((post) => (
             <tr key={post.SEQ} >
                 <td>{post.NAME}</td>
-                <td><img src={'http://localhost:3333/api/files/get/'+post.LOGOFILE} alt={LOGOFILE} name={LOGOFILE} />  </td>
+                <td><img src={'http://localhost:3000/api/files/get/'+post.LOGOFILE} alt={LOGOFILE} name={LOGOFILE} />  </td>
                 <td>{post.REGNO}</td>
                 <td>{post.ADDRESS}</td>
                 <td>{post.CONTACT}</td>
@@ -241,7 +260,7 @@ function MartList({ posts, loading, props }) {
                 <td><p onClick={(e) => editChange(post.SEQ) } style={{display:'block', cursor:'pointer'}}><i class="far fa-edit"></i></p></td>
                 <td><p onClick={(e) => imageChage(post.SEQ)} style={{display:'block', cursor:'pointer'}}><i class="far fa-image"></i></p></td>
                 <td><p  onClick={(e) => removeChange(post.SEQ)} style={{display:'block', cursor:'pointer'}}><i className="far fa-trash-alt"></i></p></td>
-            </tr>
+            </tr>  
             ))}  
 
 
@@ -341,7 +360,7 @@ function MartList({ posts, loading, props }) {
                         <Button onClick={handleFileChange} type="submit">로고수정</Button>
                         {profile_preview} */}
 
-                        <input  accept="image/*" id="raised-button-file" name='LOGOFILE' type="file" file={LOGOFILE} value={fileName} onChange={handleFileChange}/><br/>
+                        <input  accept="image/*" id="raised-button-file" name='uploadFile' type="file" file={uploadFile} value={fileName} onChange={handleFileChange}/><br/>
 
                     </Col>
                   </Row>
