@@ -38,9 +38,6 @@ const Register = (props) => {
             axios
                 .post("http://localhost:3333/api/users/idCheck", { LOGINID: LOGINID })
                 .then((response) => {
-                    // alert(response.data.data.tf);
-                    // alert("로그인 체크");
-                    // console.log('response: ', response);
                     if (response.data.data.tf === true) {
                         axios
                             .post(url, { LOGINID: LOGINID, PWD: PWD })

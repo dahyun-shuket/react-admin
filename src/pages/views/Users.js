@@ -45,7 +45,7 @@ const RegularTables = ({props}) => {
     const [currentPage, setCurrentPage] = useState(1);
     const [postsPerPage] = useState(11);
     
-    const url = 'http://localhost:3333/api/users/list';
+    const url = 'http://localhost:3000/api/users/list';
 
     useEffect(() => {
       setLoading(true);
@@ -81,7 +81,7 @@ const RegularTables = ({props}) => {
 
     const ResumetList = async () => {
       setLoading(true);
-      axios.post("http://localhost:3333/api/users/list")
+      axios.post("http://localhost:3000/api/users/list")
           .then((res) => {
           setPosts(res.data.data.list);
           setLoading(false);
@@ -103,7 +103,7 @@ const RegularTables = ({props}) => {
     const SearchButton = () => {
       setLoading(true);
       // setLOGINID('');
-      axios.post("http://localhost:3333/api/users/list",{
+      axios.post("http://localhost:3000/api/users/list",{
           LOGINID: LOGINID,
           // USERTYPE: getRegions()
       })
@@ -119,10 +119,10 @@ const RegularTables = ({props}) => {
   // 추가 모달
   const createChange = () => {
     createToggle();
-    axios.post('http://localhost:3333/api/users/idCheck', {LOGINID:LOGINID})
+    axios.post('http://localhost:3000/api/users/idCheck', {LOGINID:LOGINID})
     .then((res) => {
       if(res.data.data.tf === true) {
-        axios.post('http://localhost:3333/api/users/create', {USERTYPE:USERTYPE, LOGINID:LOGINID, PWD:PWD})
+        axios.post('http://localhost:3000/api/users/create', {USERTYPE:USERTYPE, LOGINID:LOGINID, PWD:PWD})
         .then((data) => {
           console.log('crate: ',data)
           console.log('usertype:  ', USERTYPE);

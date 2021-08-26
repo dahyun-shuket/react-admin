@@ -3,6 +3,7 @@ import { Link, Router } from "react-router-dom";
 import axios from "axios";
 import { Card, CardHeader, CardBody, Row, Col, Button, Form, Label, FormGroup, Input, Container, CardGroup, InputGroup, InputGroupText, InputGroupProps } from "reactstrap";
 import { setUserSession } from "../Utils/Common";
+import { setCookie, getCookie } from "../Utils/Cookie";
 
 // import jQuery from 'jquery';
 // window.$ = window.jQuery = jQuery;
@@ -31,9 +32,15 @@ function LoginPage(props) {
             axios
                 .post(url, { userId: LOGINID, password: PWD })
                 .then((response) => {
-                    console.log(response);
+                    // console.log(response);
                     if (response.data.result === "success") {
-                        setUserSession(response.data.data.token, response.data.data.loginId);
+                        setCookie('xToken', response.data.data.token, {
+                            path: "/",
+                            secure: true,
+                            sameSite: "none",
+                            maxAge: 24 * 60 * 60
+                        })
+                        // setUserSession(response.data.data.token, response.data.data.loginId);
                         alert("로그인 성공");
                         props.history.push("/admin");
                     } else if (response.data.result === "fail") {

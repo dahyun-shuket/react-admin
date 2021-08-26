@@ -12,9 +12,10 @@ import Register from './pages/Register';
 
 import PrivateRoute from './Utils/PrivateRoute';
 import PublicRoute from './Utils/PublicRoute';
-import { getToken, removeUserSession, setUserSession } from './Utils/Common';
-
-
+// import { getToken, removeUserSession, setUserSession } from './Utils/Common';
+// import { CookiesProvider } from 'react-cookie';
+import {getTokenCookie} from './Utils/Common'
+// import { getCookie } from './Utils/Cookie'
 export default function App(props) {
 
   const [authLoading, setAuthLoading] = useState(true);
@@ -22,22 +23,22 @@ export default function App(props) {
   const authenticated = user != null;
 
   useEffect(() => {
-    const token = getToken();
+    const token = getTokenCookie('xToken');
     if (!token) { 
       return;
     }
 
-      if (authLoading && getToken()) {
+      if (authLoading && getTokenCookie()) {
     return <div className="content">Checking Authentication...</div>
   }
 
-    axios.get(`http://localhost:3000/verifyToken?token=${token}`).then(response => {
-      setUserSession(response.data.token, response.data.user);
-      setAuthLoading(false);
-    }).catch(error => {
-      removeUserSession();
-      setAuthLoading(false);
-    });
+    // axios.get(`http://localhost:3000/verifyToken?token=${token}`).then(response => {
+    //   setUserSession(response.data.token, response.data.user);
+    //   setAuthLoading(false);
+    // }).catch(error => {
+    //   removeUserSession();
+    //   setAuthLoading(false);
+    // });
   }, []);
     
   localStorage.setItem('authenticated', authenticated)

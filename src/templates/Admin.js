@@ -14,6 +14,7 @@ import Sidebar from "./Sidebar.js";
 import routes from "../routes.js";
 import RecruitView from "../pages/views/RecruitView.js";
 import ResumeView from "../pages/views/ResumeView.js"
+// import { CookiesProvider } from "react-cookie";
 var ps;
 
 function Admin(props) {

@@ -1,4 +1,4 @@
-import { setCookie } from "./Cookie";
+import { setCookie, getCookie, removeCookie } from "./Cookie";
 // return the user data from the session storage
 export const getUser = () => {
   const userStr = sessionStorage.getItem('user');
@@ -23,10 +23,14 @@ export const setUserSession = (token, user) => {
   sessionStorage.setItem('user', JSON.stringify(user));
 }
 
-export const setUserCookie = (token, user) => {
-  setCookie('myToken', token, {
-    path: "/",
-    secure: true,
-    sameSite: "none",
-  })
+export const getTokenCookie = () => {
+  return getCookie('xToken') || null;
 }
+
+// export const setUserCookie = (token, user) => {
+//   setCookie('xToken', token, {
+//     path: "/",
+//     secure: true,
+//     sameSite: "none",
+//   })
+// }

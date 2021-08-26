@@ -1,6 +1,8 @@
 import React from "react";
 import { useLocation } from "react-router-dom";
-import { removeUserSession } from "../Utils/Common";
+// import { removeUserSession } from "../Utils/Common";
+import { removeCookie, setCookie} from '../Utils/Cookie';
+import {useCookies} from 'react-cookie';
 import {
   Collapse,
   Navbar,
@@ -26,6 +28,7 @@ function DemoNavbar(props) {
   const [MymenudropdownOpen, setMymenuropdownOpen] = React.useState(false);
   const [color, setColor] = React.useState("transparent");
   const sidebarToggle = React.useRef();
+  const [cookies, setCookie, removeCookie] = useCookies(["xToken"]);
   const toggle = () => {
     if (isOpen) {
       setColor("transparent");
@@ -79,9 +82,13 @@ function DemoNavbar(props) {
   };
   // 로그아웃 logout
   const handleLogout = () => {
-    removeUserSession();
+    // removeUserSession();
+    // removeCookie('xToken');
+    document.cookie = "xToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+    // removeCookie('xToken', {expires: 0})
     props.history.push('/login')
   }
+
   React.useEffect(() => {
     window.addEventListener("resize", updateColor);
   }, []);

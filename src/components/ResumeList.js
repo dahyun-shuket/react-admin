@@ -11,22 +11,16 @@ function ResumeList(resumeLists) {
             {resumeLists.resumeLists.map((data) => {
                 return (
                     <tr key={data.SEQ}>
-                        <td>
+                        <td className="text-center">
                             <Link to={`/admin/resume/${data.SEQ}`}>{data.NAME}</Link>
                         </td>
-                        <td>{data.CONTACT}</td>
-                        <td>{data.BIRTHYEAR}</td>
-                        <td>{data.GENDER}</td>
-                        <td>{data.WORKREGION_NAME}</td>
-                        <td>{data.JOBKIND_NAME}</td>
-                        <td>{data.CERTIFICATE}</td>
-                        <td>{moment(data.MODIFIED).format('YYYY-MM-DD')}</td>
-                        <td>
-                            <Button className="btn-icon btn-neutral" color="success" id="tooltip824696339" size="sm" type="button">
-                                <i className="now-ui-icons ui-2_settings-90" />
-                            </Button>
-                            <UncontrolledTooltip delay={0} target="tooltip824696339" />
-                        </td>
+                        <td className="text-center">{data.CONTACT}</td>
+                        <td className="text-center">{data.BIRTHYEAR}</td>
+                        <td className="text-center">{data.GENDER}</td>
+                        <td className="text-center">{data.WORKREGION_NAME}</td>
+                        <td className="text-center">{data.JOBKIND_NAME}</td>
+                        <td className="text-center">{data.CERTIFICATE}</td>
+                        <td className="text-center">{moment(data.MODIFIED).format('YYYY-MM-DD')}</td>
                     </tr>
                 );
             })}

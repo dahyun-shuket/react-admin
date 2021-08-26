@@ -3,6 +3,8 @@ import axios from "axios";
 import { Button, Nav, TabContent, TabPane, NavItem, NavLink, Card, CardHeader, CardBody, CardTitle, Table, Row, Col, CardFooter } from "reactstrap";
 import { useParams } from "react-router-dom";
 import moment from "moment";
+import secrectKey from'../../Utils/secretkey'
+import { getCookie } from "Utils/Cookie";
 
 const RecruitView = () => {
     let { id } = useParams();
@@ -17,6 +19,7 @@ const RecruitView = () => {
         if (activeTab !== tab) setActiveTab(tab);
     };
 
+    // console.log(secrectKey.secretKey)
     const RecruitDetail = async () => {
         setLoading(true);
         await axios
@@ -35,19 +38,7 @@ const RecruitView = () => {
                 setLoading(false);
             });
     };
-    // const MartInfo = async () => {
-    //     // console.log("마트인포 ? ? ? " + recruitDetailData.MART_SEQ)
-    //     setLoading(true);
-        
-    //     await axios
-    //         .post("http://localhost:3000/api/mart/get", {
-    //             seq: recruitDetailData.MART_SEQ
-    //         })  
-    //         .then((response) => {
-    //             setMartInfo(response.data.data);
-    //             setLoading(false);
-    //         });
-    // };
+
     const listForRecruit = async () => {
         setLoading(true);
         await axios.post("http://localhost:3000/api/resume/listForRecruit",{
@@ -63,23 +54,33 @@ const RecruitView = () => {
                 setLoading(false);
         })
     };
+
     const ListButton = async () => {
         window.location.replace("/admin/recruit");
     };
+
     const StopButton = async () => {
         if (window.confirm("게시중인 이력서를 게시 중단하시겠습니까? 중단된 이력서는 다시 게시할 수 없습니다. 이 작업은 되돌릴 수 없습니다.")) {
             if (window.confirm("다시 한 번 확인합니다. 정말로 게시 중단하겠습니까?")) {
+                alert(getCookie('xToken'));
                 axios
-                    .post(`http://localhost:3000/api/recruit/remove`, {
-                        seq: id,
-                    })
-                    .success(function (json) {
-                        if (json.result == "success") window.location.replace("/admin/recruit");
-                        else alert("이력서를 게시 중단하는 도중에 오류가 발생했습니다.");
-                    })
-                    .fail(function (sender, message, details) {
-                        alert("이력서를 게시 중단하는 도중에 오류가 발생했습니다.");
-                    });
+                .post(`http://localhost:3000/api/recruit/remove`, {
+                    seq: id,
+                    key: secrectKey.secretKey
+                }, {headers: 
+                    {
+                        'contentType': 'application/json',
+                        'User-Agent': 'DEVICE-AGENT',
+                        'userAgent': 'DEVICE-AGENT',
+                        'Authorization': getCookie('xToken')
+                    }
+                })
+                .then(function (json) {
+                    alert(JSON.stringify(json));
+                    if (json.data.result === "success") 
+                    window.location.replace("/admin/recruit");
+                    else alert("이력서를 게시 중단하는 도중에 오류가 발생했습니다. 1");
+                });
             }
         }
         return false;
@@ -87,7 +88,6 @@ const RecruitView = () => {
     
     useEffect(() => {   
         RecruitDetail();
-        // MartInfo();
         listForRecruit();
     }, []);
     

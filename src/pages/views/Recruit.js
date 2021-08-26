@@ -229,7 +229,6 @@ const Recruit = () => {
                                         <th className="text-center">지원자</th>
                                         <th className="text-center">상태</th>
                                         <th className="text-center">수정일</th>
-                                        <th className="text-center">수정</th>
                                     </tr>
                                 </thead>
                                 <tbody>

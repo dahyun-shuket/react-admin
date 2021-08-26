@@ -4,6 +4,9 @@ import { Button, Nav, TabContent, TabPane, NavItem, NavLink, Card, CardHeader, C
 import { useParams } from "react-router-dom";
 import moment from "moment";
 import CareerLists from "components/CareerList";
+import secrectKey from'../../Utils/secretkey'
+import { getCookie } from "Utils/Cookie";
+
 const ResumeView = () => {
     let { id } = useParams();
     const [resumeDetailData, setResumeDetailData] = useState([]);
@@ -49,14 +52,20 @@ const ResumeView = () => {
                 axios
                     .post(`http://localhost:3000/api/resume/remove`, {
                         seq: id,
+                        key: secrectKey.secretKey
+                    }, {headers: 
+                        {
+                            'contentType': 'application/json',
+                            'User-Agent': 'DEVICE-AGENT',
+                            'userAgent': 'DEVICE-AGENT',
+                            'Authorization': getCookie('xToken')
+                        }
                     })
-                    .success(function (json) {
-                        if (json.result == "success") window.location.replace("/admin/resume");
+                    .then(function (json) {
+                        if (json.data.result == "success") 
+                        window.location.replace("/admin/resume");
                         else alert("이력서를 게시 중단하는 도중에 오류가 발생했습니다.");
                     })
-                    .fail(function () {
-                        alert("이력서를 게시 중단하는 도중에 오류가 발생했습니다.");
-                    });
             }
         }
         return false;
@@ -83,7 +92,7 @@ const ResumeView = () => {
     useEffect(() => {
         ResumeDetail();
         CareerList();
-    }, []);
+    }, [resumeDetailData.CERTIFICATE]);
     
     if (loading) {
         return <h2>Loading...</h2>;
@@ -136,16 +145,14 @@ const ResumeView = () => {
                                                     </Col>
                                                     <Col md={6}>
                                                         <div className="widget-bg-color-icon card-box">
-                                                            <div className="bg-icon bg-icon-success pull-left">
-                                                                <i className="fa fa-check"></i>
-                                                            </div>
+                                                            {console.log(resumeDetailData.CERTIFICATE)}
                                                             <div className="text-center">
-                                                                <h3 className="text-dark"><b> {(resumeDetailData.CERTIFICATEDATE)? 'CERTIFICATED' : 'WAIT'}</b></h3>                                                                
-                                                                <p className="text-muted">{(resumeDetailData.CERTIFICATEDATE) 
+                                                                <h3 className="text-dark"><b> {(resumeDetailData.CERTIFICATE == 'Y')? 'CERTIFICATED' : 'WAIT'}</b></h3>                                                                
+                                                                <p className="text-muted">{(resumeDetailData.CERTIFICATE == 'Y') 
                                                                 ? moment(resumeDetailData.CERTIFICATEDATE).format('YYYY-MM-DD') 
                                                                 : '아직 검증되지 않았습니다'}</p>
                                                                 {
-                                                                    (resumeDetailData.CERTIFICATEDATE) 
+                                                                    (resumeDetailData.CERTIFICATE == 'Y') 
                                                                     ? <p><Button type="button" className="btn btn-warning waves-effect w-md waves-light m-t-5" onClick={ButtonCertificateCancel}>검증 취소</Button></p> 
                                                                     : <p><Button type="button" className="btn btn-warning waves-effect w-md waves-light m-t-5" onClick={ButtonCertificate}>검증 완료</Button></p>
                                                                 }
