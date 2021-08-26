@@ -145,7 +145,6 @@ const ResumeView = () => {
                                                     </Col>
                                                     <Col md={6}>
                                                         <div className="widget-bg-color-icon card-box">
-                                                            {console.log(resumeDetailData.CERTIFICATE)}
                                                             <div className="text-center">
                                                                 <h3 className="text-dark"><b> {(resumeDetailData.CERTIFICATE == 'Y')? 'CERTIFICATED' : 'WAIT'}</b></h3>                                                                
                                                                 <p className="text-muted">{(resumeDetailData.CERTIFICATE == 'Y') 
@@ -190,7 +189,6 @@ const ResumeView = () => {
                                                     <Col md={12}>
                                                     <h5 className="text-primary m-b-10">
                                                         <a href={'http://localhost:3000/api/files/get/' + resumeDetailData.CAREERCERTIFICATE} target="_blank">  
-                                                        {/* <i class="fa fa-file-text-o"></i>  아이콘자리*/}
                                                         경력 인증문서 다운받기</a>
                                                     </h5>
                                                     </Col>
@@ -241,7 +239,7 @@ const ResumeView = () => {
                     <Card>
                         <Row>
                             <Col className="text-center">
-                                {resumeDetailData.PHOTO ? <img src={"http://localhost:3000/api/files/get/" + resumeDetailData.PHOTO} alt="profile-image" /> : <h3>resumeDetailData.NAME</h3>}
+                                {resumeDetailData.PHOTO ? <img src={"http://localhost:3000/api/files/get/" + resumeDetailData.PHOTO} alt="profile-image" /> : <h3>{resumeDetailData.NAME}</h3>}
                             </Col>
 
                             <div class="text-left m-t-40">

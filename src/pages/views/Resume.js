@@ -291,6 +291,7 @@ const Resume = () => {
                                         <th className="text-center">희망지역</th>
                                         <th className="text-center">직종</th>
                                         <th className="text-center">인증</th>
+                                        <th className="text-center">파일</th>
                                         <th className="text-center">수정일</th>
                                     </tr>
                                 </thead>
