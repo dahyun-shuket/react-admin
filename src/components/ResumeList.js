@@ -20,7 +20,7 @@ function ResumeList(resumeLists) {
                         <td className="text-center">{data.WORKREGION_NAME}</td>
                         <td className="text-center">{data.JOBKIND_NAME}</td>
                         <td className="text-center">{(data.CERTIFICATE == 'Y') ? <i className='fa fa-check text-success'></i> : ''}</td>
-                        <td>{ (data.CAREERCERTIFICATE)
+                        <td className="text-center">{ (data.CAREERCERTIFICATE)
                         ?  <a href={`http://localhost:3000/api/files/get/${data.CAREERCERTIFICATE}`} target="_blank"><i className="far fa-save"></i></a> 
                         : ''} </td>
                         <td className="text-center">{moment(data.MODIFIED).format('YYYY-MM-DD')}</td>
