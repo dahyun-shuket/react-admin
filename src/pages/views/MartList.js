@@ -248,7 +248,7 @@ function MartList({ posts, loading, props }) {
 
     return (
         <>
-          {posts.map((post) => (
+          {posts && posts.map((post) => (
             <tr key={post.SEQ} >
                 <td>{post.NAME}</td>
                 <td><img src={'http://localhost:3000/api/files/get/'+post.LOGOFILE} alt={LOGOFILE} name={LOGOFILE} />  </td>

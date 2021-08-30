@@ -5,7 +5,7 @@ import { Card, CardBody, CardHeader, CardTitle, CardFooter, InputGroup, Form, Ta
   import PanelHeader from "../../templates/PanelHeader";
   import { post } from 'axios';
   import MartList from './MartList';
-  import Paging from "../../components/Paging";
+  import Pagination from "rc-pagination";
 
   const thead = ["마트명", "마트로고","사업자번호", "주소","연락처", "작성일", "수정일"];
   let urlList = `http://localhost:3000/api/mart/list`;
@@ -15,9 +15,11 @@ const Mart = (props) => {
     const [posts, setPosts] = useState([]);
     const [loading, setLoading] = useState(false);
     const [currentPage, setCurrentPage] = useState(1);
-    const [postsPerPage] = useState(7);
+    const [postsPerPage] = useState(10);
+    const [totalCount, setTotalCount] = useState("");
     const [NAME, setNAME] = useState('');
     const [ADDRESS, setADDRESS] = useState('');
+    const [RENGO, setRENGO] = useState('');
 
     const [refresh, setRefresh] = useState(0);
 
@@ -30,9 +32,10 @@ const Mart = (props) => {
       axios.post(urlList)
         .then((res) => {
           setPosts(res.data.data.list);
+          setTotalCount(res.data.data.totalCount);
           setLoading(false);
+          console.log('페이지 몇개인지 테스트', res.data.data.totalCount)
         })
-
     }
   
 
@@ -56,9 +59,11 @@ const Mart = (props) => {
       setLoading(true);
       axios.post("http://localhost:3000/api/mart/list",{
           NAME: NAME,
+          RENGO: RENGO,
       })
-          .then((response) => {
-          setPosts(response.data.data.list);
+          .then((res) => {
+          setPosts(res.data.data.list);
+          setTotalCount(res.data.data.totalCount);
           setLoading(false);
       });
   };
@@ -87,21 +92,26 @@ const Mart = (props) => {
   toggle();
   setNAME('');
   setADDRESS('');
+  setRENGO('');
 }
-const MartSearchReset = () => {
+const MartSearchReset = async () => {
   setLoading(true);
-  axios.post("http://localhost:3000/api/mart/list",{
-      NAME: NAME
-  })
+  axios.post(urlList)
     .then((res) => {
       setPosts(res.data.data.list);
       setLoading(false);
+      setNAME('');
+      setRefresh(oldkey => oldkey +1);
     })
 };
+    // const indexOfLastPost = currentPage * postsPerPage;
+    // const indexOfFirstPost = indexOfLastPost - postsPerPage;
+    // const currentPosts = (posts !== null) ? posts.slice(indexOfFirstPost, indexOfLastPost) : [];
+    // const paginate = (pageNumber) => setCurrentPage(pageNumber);
+
     const indexOfLastPost = currentPage * postsPerPage;
     const indexOfFirstPost = indexOfLastPost - postsPerPage;
-    const currentPosts = posts.slice(indexOfFirstPost, indexOfLastPost);
-    const paginate = (pageNumber) => setCurrentPage(pageNumber);
+    const currentPosts = posts != null ? posts.slice(indexOfFirstPost, indexOfLastPost) : [];
 
     if (loading) {
       return <h2>Loading...</h2>;
@@ -118,7 +128,7 @@ const MartSearchReset = () => {
                 <Card>
                   <CardHeader>
                     <CardTitle tag="h4">마트 관리
-                    <button onClick={toggle} >추가</button>
+                    {/* <button onClick={toggle} >추가</button> */}
                     </CardTitle>
                   </CardHeader>
 
@@ -155,10 +165,7 @@ const MartSearchReset = () => {
                     </Table>
                   </CardBody>
                   <CardFooter>
-                    <Paging postsPerPage={postsPerPage}
-                    totalPosts={posts.length}
-                    paginate={paginate}>
-                  </Paging>
+                  <Pagination className="ant-pagination d-flex justify-content-center" total={totalCount} current={currentPage} pageSize={postsPerPage} onChange={(page) => setCurrentPage(page)} />
                   </CardFooter>
                 </Card>
               </Col>
