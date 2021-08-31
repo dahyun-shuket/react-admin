@@ -42,7 +42,7 @@ const UserList = ({props, posts, loading, Aposts, Mposts, Uposts, types, names})
   // 수정하기전 가져오기 GET
   const editChange = (SEQ) => {
     toggle();
-    const urlGet = `http://localhost:3333/api/users/get`;
+    const urlGet = `http://localhost:3000/api/users/get`;
     axios.post(urlGet, {SEQ:SEQ, LOGINID:LOGINID})
       .then((res) => {
         console.log('get:  ', res)
@@ -54,7 +54,7 @@ const UserList = ({props, posts, loading, Aposts, Mposts, Uposts, types, names})
   // 수정 
   const editUser = () => {
     toggle();
-    const urlUpdate = `http://localhost:3333/api/users/update`;
+    const urlUpdate = `http://localhost:3000/api/users/update`;
     axios.post(urlUpdate, {SEQ:SEQ, LOGINID:LOGINID, PWD:PWD})
       .then((res) => {
         console.log('update:  ', res)
@@ -76,7 +76,7 @@ const UserList = ({props, posts, loading, Aposts, Mposts, Uposts, types, names})
   }
   
   const removeUser = (SEQ) => {
-    const urlRemove = 'http://localhost:3333/api/users/remove';
+    const urlRemove = 'http://localhost:3000/api/users/remove';
     if(window.confirm('삭제하시겠습니까?')) {
         axios.post(urlRemove, {SEQ:SEQ})
         .then((data) => {

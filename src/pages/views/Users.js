@@ -7,8 +7,9 @@ import {Card,CardBody,CardHeader,InputGroup,CardTitle,CardFooter,Table,Form,Row,
 // core components
 import PanelHeader from "../../templates/PanelHeader";
 import axios from "axios";
-import Paging from "../../components/Paging";
+// import Paging from "../../components/Paging";
 import UserList from "./UserList";
+import Pagination from "rc-pagination";
 
 const thead = ["아이디", "구분", "생성일", "수정일"];
 
@@ -24,7 +25,7 @@ const RegularTables = ({props}) => {
     const [SEQ, setSEQ] = useState('');
     const [LOGINID, setLOGINID] = useState('');
     const [PWD, setPWD] = useState('');
-    const [USERTYPE, setUSERTYPE] = useState('');
+    const [USERTYPE, setUSERTYPE] = useState('A');
 
     // modal
     const [modal, setModal] = useState(false);
@@ -46,35 +47,36 @@ const RegularTables = ({props}) => {
     const [loading, setLoading] = useState(false);
     const [currentPage, setCurrentPage] = useState(1);
     const [postsPerPage] = useState(11);
+    const [totalCount, setTotalCount] = useState("");
 
     const [types, setTypes] = useState('');
     const [filter, setFilter] = useState('');
     const [filterType, setFilterType] = useState(posts);
     
-    const url = 'http://localhost:3333/api/users/list';
+    const url = 'http://localhost:3000/api/users/reactlist';
 
-
+    const obj = {
+      0: USERTYPE === 'A',
+      1: USERTYPE === 'M',
+      2: USERTYPE === 'U',
+    }
 
     useEffect(() => {
       setLoading(true);
+      console.log("USERTYPE ? ?   " , USERTYPE)
       axios.post(url, {USERTYPE:USERTYPE})
         .then((res) => {
           setPosts(res.data.data.list);
+          setTotalCount(res.data.data.totalCount);
           setLoading(false);
         })
     }, [refresh]);
+    
 
-    // useEffect(() => {
-    //   setFilterType(
-    //     posts.filter((post) => 
-    //       post.types.toLowerCase().includes(filter.toLowerCase())
-    //     )
-    //   )
-    // },[filter, posts])
 
     const ResumetList  = async () => {
       setLoading(true);
-      axios.post("http://localhost:3333/api/users/list")
+      axios.post("http://localhost:3000/api/users/reactlist")
           .then((res) => {
           setPosts(res.data.data.list);
           setLoading(false);
@@ -97,81 +99,25 @@ const RegularTables = ({props}) => {
     setLoading(true);
     // setLOGINID('');
     let testType = ['A', 'M', 'U'];
-    axios.post("http://localhost:3333/api/users/list",{
+    axios.post("http://localhost:3000/api/users/reactlist",{
         LOGINID: LOGINID,
         USERTYPE: posts.USERTYPE,
     })
       .then((res) => {
         setPosts(res.data.data.list);
-        // setAPosts(res.data.data.list);
-        // setMPosts(res.data.data.list);
-        // setUPosts(res.data.data.list);
+        setTotalCount(res.data.data.totalCount);
         setLoading(false);
       })
   };
 
-    // 검색 버튼
-    const SearchAButton = () => {
-      setLoading(true);
-      // setLOGINID('');
-      let testType = ['A', 'M', 'U'];
-      console.log(posts.USERTYPE);
-      axios.post("http://localhost:3333/api/users/list",{
-          LOGINID: LOGINID,
-          USERTYPE: 'A',
-      })
-      
-        .then((res) => {
-          // setPosts(res.data.data.list);
-          setAPosts(res.data.data.list);
-          // setMPosts(res.data.data.list);
-          // setUPosts(res.data.data.list);
-          setLoading(false);
-        })
-        
-  };
-     // 마트관리자 검색 버튼
-     const SearchMButton = () => {
-      setLoading(true);
-      // setLOGINID('');
-      let testType = ['A', 'M', 'U'];
-      axios.post("http://localhost:3333/api/users/list",{
-          LOGINID: LOGINID,
-          USERTYPE: 'M',
-      })
-        .then((res) => {
-          // setPosts(res.data.data.list);
-          // setAPosts(res.data.data.list);
-          setMPosts(res.data.data.list);
-          // setUPosts(res.data.data.list);
-          setLoading(false);
-        })
-  };
-     // 구직자 검색 버튼
-     const SearchUButton = () => {
-      setLoading(true);
-      // setLOGINID('');
-      let testType = ['A', 'M', 'U'];
-      axios.post("http://localhost:3333/api/users/list",{
-          LOGINID: LOGINID,
-          USERTYPE: 'U',
-      })
-        .then((res) => {
-          // setPosts(res.data.data.list);
-          // setAPosts(res.data.data.list);
-          // setMPosts(res.data.data.list);
-          setUPosts(res.data.data.list);
-          setLoading(false);
-        })
-  };
 
   // 추가 모달
   const createChange = () => {
     createToggle();
-    axios.post('http://localhost:3333/api/users/idCheck', {LOGINID:LOGINID})
+    axios.post('http://localhost:3000/api/users/idCheck', {LOGINID:LOGINID})
     .then((res) => {
       if(res.data.data.tf === true) {
-        axios.post('http://localhost:3333/api/users/create', {USERTYPE:USERTYPE, LOGINID:LOGINID, PWD:PWD})
+        axios.post('http://localhost:3000/api/users/create', {USERTYPE:USERTYPE, LOGINID:LOGINID, PWD:PWD})
         .then((data) => {
           console.log('crate: ',data)
           console.log('usertype:  ', USERTYPE);
@@ -220,7 +166,7 @@ const RegularTables = ({props}) => {
   const Mtypes = posts.filter((post) => {
     return post.USERTYPE === 'M'
   });
-  console.log(Mposts)
+  // console.log(Mposts)
   const Utypes = posts.filter((post) => {
     return post.USERTYPE === 'U'
   });
@@ -228,11 +174,10 @@ const RegularTables = ({props}) => {
 
     const indexOfLastPost = currentPage * postsPerPage;
     const indexOfFirstPost = indexOfLastPost - postsPerPage;
-    const currentPosts = (Atypes != null) ? Atypes.slice(indexOfFirstPost, indexOfLastPost) : [];
-    const currentMPosts = (Mtypes != null) ? Mtypes.slice(indexOfFirstPost, indexOfLastPost) : [];
-    const currentUPosts = (Utypes != null) ? Utypes.slice(indexOfFirstPost, indexOfLastPost) : [];
-    const currentNPosts = posts.slice(indexOfFirstPost, indexOfLastPost);
-    const paginate = (pageNumber) => setCurrentPage(pageNumber);
+    const currentPosts = Atypes != null ? Atypes.slice(indexOfFirstPost, indexOfLastPost) : [];
+    const currentMPosts = Mtypes != null ? Mtypes.slice(indexOfFirstPost, indexOfLastPost) : [];
+    const currentUPosts = Utypes != null ? Utypes.slice(indexOfFirstPost, indexOfLastPost) : [];
+
 
     // if (loading) {
     //   return <h2>Loading...</h2>;
@@ -249,26 +194,6 @@ const RegularTables = ({props}) => {
                     <Card>
                         <CardBody>
                             <Row>
-                                {/*<Label sm="2">유저 구분</Label>
-                                 <Col className="checkbox-radios" sm={10}>
-                                    <FormGroup check>
-                                        <Label check>
-                                            <Input type="checkbox" name="USERTYPE" value='A' />
-                                            <span className="form-check-sign" />
-                                            관리자
-                                        </Label>
-                                        <Label check>
-                                            <Input type="checkbox" name="USERTYPE" value='M' />
-                                            <span className="form-check-sign" />
-                                            마트관리자
-                                        </Label>
-                                        <Label check>
-                                            <Input type="checkbox" name="USERTYPE" value='U'/>
-                                            <span className="form-check-sign" />
-                                            구직자
-                                        </Label>
-                                    </FormGroup>
-                                </Col> */}
                                 <Label md="2">아이디</Label>
                                 <Col md='10'>
                                     <InputGroup className="no-border">
@@ -279,9 +204,6 @@ const RegularTables = ({props}) => {
                         </CardBody>
                         <CardFooter>
                             <Button className='btn-info' onClick={SearchButton} style={{marginRight:'10px'}}>전체 검색</Button>
-                            <Button className='link' onClick={SearchAButton} style={{marginRight:'10px'}}>관리자 검색</Button>
-                            <Button className='link' onClick={SearchMButton} style={{marginRight:'10px'}}>마트관리자 검색</Button>
-                            <Button className='link' onClick={SearchUButton} style={{marginRight:'10px'}}>구직자 검색</Button>
                             <Button className='btn-info' onClick={ResumetList}>조건 리셋</Button>
                             <Button style={{float:'right'}} color="info" onClick={createToggle}>사용자 추가  <i class="fa fa-plus"></i></Button>
                         </CardFooter>
@@ -295,7 +217,7 @@ const RegularTables = ({props}) => {
         <NavItem  xs={12}>
           <NavLink
             className={({ active: activeTab === '1' })}
-            onClick={() => { toggleTab('1');  setCurrentPage(1);}}
+            onClick={() => { toggleTab('1');  setCurrentPage(1); setUSERTYPE('A') }}
           >
             관리자
             {/* <NavLink className={((USERTYPE === 'A') ? 'active' : '')}>관리자</NavLink> */}
@@ -304,7 +226,7 @@ const RegularTables = ({props}) => {
         <NavItem  xs={12}>
           <NavLink
             className={({ active: activeTab === '2' ? 'active' : ''})}
-            onClick={() => { toggleTab('2'); setCurrentPage(1);}}
+            onClick={() => { toggleTab('2'); setCurrentPage(1); setUSERTYPE('M')}}
           >
             마트관리자
             {/* <NavLink className={((USERTYPE === 'M') ? 'active' : '')}>마트관리자</NavLink> */}
@@ -314,8 +236,7 @@ const RegularTables = ({props}) => {
         <NavItem  xs={12}>
           <NavLink
             className={({ active: activeTab === '3' ? 'active' : ''})}
-            onClick={() => { toggleTab('3'); setCurrentPage(1); }}
-            // onChange={UserType}
+            onClick={() => { toggleTab('3'); setCurrentPage(1); setUSERTYPE('U') }}
           >
             구직자
             {/* <NavLink onClick={UserType}>구직자</NavLink> */}
@@ -346,19 +267,14 @@ const RegularTables = ({props}) => {
                             })}
                             </tr>
                         </thead>
-                        <tbody>
-                          <UserList posts={currentPosts} Atypes={Atypes}  types={'A'} onChange={console.log('AtypesOnchange',currentPosts, Atypes)} ></UserList> 
+                        <tbody> 
+                          {/* onChange={console.log('AtypesOnchange',currentPosts, Atypes)} */}
+                          <UserList posts={currentPosts} Atypes={Atypes} USERTYPE={'A'}  types={'A'} onChange={() => types('A')} ></UserList> 
                         </tbody>
-                        
-
                         </Table>
                       </CardBody>
                       <CardFooter>
-                        <Paging postsPerPage={postsPerPage}
-                          totalPosts={(Atypes) ? Atypes.length : 0}
-                          onChange={console.log('관리자 포스트 갯수', Atypes.length)}
-                          paginate={paginate}>
-                        </Paging>
+                      <Pagination className="ant-pagination d-flex justify-content-center"  total={totalCount} current={currentPage} pageSize={postsPerPage} onChange={(page) => {setCurrentPage(page); console.log('totalcount'+totalCount.length, 'currentPage'+currentPage)}} />
                       </CardFooter>
                     </Card>
                 </Col>
@@ -366,7 +282,7 @@ const RegularTables = ({props}) => {
           </TabPane>
 
 
-           <TabPane tabId="2" >
+          <TabPane tabId="2" >
             <Row>
                 <Col xs={12}>
                     <Card>
@@ -386,16 +302,12 @@ const RegularTables = ({props}) => {
                               </tr>
                           </thead>
                           <tbody>
-                            <UserList posts={currentMPosts} Mtypes={Mtypes} types={'M'} ></UserList>
+                            <UserList posts={currentMPosts} Mtypes={Mtypes} types={'M'}  onChange={(USERTYPE) => USERTYPE('M')} ></UserList>
                           </tbody>
                           </Table>
                       </CardBody>
                       <CardFooter>
-                        <Paging postsPerPage={postsPerPage}
-                          totalPosts={Mtypes.length}
-                          onChange={console.log('마트관리자 포스트 갯수',Mtypes.length)}
-                          paginate={paginate}>
-                        </Paging>
+                      <Pagination className="ant-pagination d-flex justify-content-center" total={totalCount} current={currentPage} pageSize={postsPerPage}  />
                       </CardFooter>
                     </Card>
                 </Col>
@@ -428,10 +340,7 @@ const RegularTables = ({props}) => {
                         </Table>
                     </CardBody>
                     <CardFooter>
-                      <Paging postsPerPage={postsPerPage}
-                        totalPosts={Utypes.length}
-                        paginate={paginate}>
-                      </Paging>
+                    <Pagination className="ant-pagination d-flex justify-content-center" total={totalCount} current={currentPage} pageSize={postsPerPage} onChange={(page) => {setCurrentPage(page); console.log('totalcount'+totalCount.length, 'currentPage'+currentPage)}} />
                       </CardFooter>
                     </Card>
                 </Col>

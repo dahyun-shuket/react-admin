@@ -172,7 +172,7 @@ const NoticeTables = ({props}) => {
                                 <Col md='7'>
                                     <InputGroup className="no-border">
                                       {/* ({ target: { value } }) => setName(value) */}
-                                      <Input  placeholder="Search..." id='searchInput'  onChange={ ( {target: {value}} ) => setCONTENT(value)   } />
+                                      <Input  placeholder="Search..." id='searchInput'  onChange={ ( {target: {value}} ) => {setSUBJECT(value)  }   } />
                                     </InputGroup>
                                 </Col>
                                 <Col md='3' style={{border:'1px solid yellow'}}>

@@ -15,7 +15,7 @@ const Mart = (props) => {
     const [posts, setPosts] = useState([]);
     const [loading, setLoading] = useState(false);
     const [currentPage, setCurrentPage] = useState(1);
-    const [postsPerPage] = useState(10);
+    const [postsPerPage] = useState(2);
     const [totalCount, setTotalCount] = useState("");
     const [NAME, setNAME] = useState('');
     const [ADDRESS, setADDRESS] = useState('');
@@ -34,7 +34,7 @@ const Mart = (props) => {
           setPosts(res.data.data.list);
           setTotalCount(res.data.data.totalCount);
           setLoading(false);
-          console.log('페이지 몇개인지 테스트', res.data.data.totalCount)
+          console.log('몇개인지 테스트', res.data.data.totalCount)
         })
     }
   
@@ -47,7 +47,7 @@ const Mart = (props) => {
       setInterval(() => {
         setLoading((prevProgress) => (prevProgress >= 100 ? 0 : prevProgress + 1));
       }, 20);
-      const result = await axios.post('http://localhost:3000/api/mart/list');
+      const result = await axios.post('http://localhost:3000/api/mart/reactlist');
       setPosts(result.data.data.list);
     }
 
@@ -57,7 +57,7 @@ const Mart = (props) => {
     // 검색하기
     const SearchButton = async () => {
       setLoading(true);
-      axios.post("http://localhost:3000/api/mart/list",{
+      axios.post("http://localhost:3000/api/mart/reactlist",{
           NAME: NAME,
           RENGO: RENGO,
       })
@@ -65,6 +65,7 @@ const Mart = (props) => {
           setPosts(res.data.data.list);
           setTotalCount(res.data.data.totalCount);
           setLoading(false);
+          console.log('검색 갯수', res.data.data.totalCount)
       });
   };
 
@@ -165,7 +166,7 @@ const MartSearchReset = async () => {
                     </Table>
                   </CardBody>
                   <CardFooter>
-                  <Pagination className="ant-pagination d-flex justify-content-center" total={totalCount} current={currentPage} pageSize={postsPerPage} onChange={(page) => setCurrentPage(page)} />
+                  <Pagination className="ant-pagination d-flex justify-content-center" total={totalCount} current={currentPage} pageSize={postsPerPage} onChange={(page) => {setCurrentPage(page); console.log('totalCount',totalCount)}} />
                   </CardFooter>
                 </Card>
               </Col>
