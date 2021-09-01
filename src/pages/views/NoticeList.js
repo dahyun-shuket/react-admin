@@ -6,7 +6,7 @@ import Select from "react-select";
 import axios from "axios";
 import moment from "moment";
 
-const thead = ["제목", "내용", "작성일", "수정일"];
+const thead = ["제목", "내용", "수정일"];
 
 
 function NoticeList({ posts, loading, props }) {
@@ -104,8 +104,8 @@ const editChange = (SEQ) => {
           <tr key={post.SEQ} >
             <td onClick={(e) => viewClick(post.SEQ)} style={{cursor:'pointer'}}>{post.SUBJECT}</td>
             <td onClick={(e) => viewClick(post.SEQ)} style={{cursor:'pointer'}}>{post.CONTENT}</td>
-            <td>{moment(post.MODIFIED).format("YYYY-MM-DD hh:mm:ss")}</td>
-            <td>{moment(post.MODIFIED).format("YYYY-MM-DD hh:mm:ss")}</td>
+            {/* <td>{moment(post.MODIFIED).format("YYYY-MM-DD hh:mm:ss")}</td> */}
+            <td>{moment(post.MODIFIED).format("YYYY-MM-DD hh:mm")}</td>
             <td><p onClick={(e) => editChange(post.SEQ)} style={{display:'block', cursor:'pointer'}}><i class="far fa-edit"></i></p></td>
             <td><p onClick={(e) => removeTable(post.SEQ)} style={{display:'block', cursor:'pointer'}}><i className="far fa-trash-alt"></i></p></td>
           </tr>

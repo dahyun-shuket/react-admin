@@ -26,7 +26,7 @@ import moment from "moment";
 
 const thead = ["아이디", "구분", "생성일", "수정일"];
 
-const UserList = ({props, posts, loading, Aposts, Mposts, Uposts}) => {
+const UserList = ({props, posts, loading, Aposts, Mposts, Uposts, types, names}) => {
 
 
     // users
@@ -42,7 +42,7 @@ const UserList = ({props, posts, loading, Aposts, Mposts, Uposts}) => {
   // 수정하기전 가져오기 GET
   const editChange = (SEQ) => {
     toggle();
-    const urlGet = `http://localhost:3333/api/users/get`;
+    const urlGet = `http://localhost:3000/api/users/get`;
     axios.post(urlGet, {SEQ:SEQ, LOGINID:LOGINID})
       .then((res) => {
         console.log('get:  ', res)
@@ -54,7 +54,7 @@ const UserList = ({props, posts, loading, Aposts, Mposts, Uposts}) => {
   // 수정 
   const editUser = () => {
     toggle();
-    const urlUpdate = `http://localhost:3333/api/users/update`;
+    const urlUpdate = `http://localhost:3000/api/users/update`;
     axios.post(urlUpdate, {SEQ:SEQ, LOGINID:LOGINID, PWD:PWD})
       .then((res) => {
         console.log('update:  ', res)
@@ -76,7 +76,7 @@ const UserList = ({props, posts, loading, Aposts, Mposts, Uposts}) => {
   }
   
   const removeUser = (SEQ) => {
-    const urlRemove = 'http://localhost:3333/api/users/remove';
+    const urlRemove = 'http://localhost:3000/api/users/remove';
     if(window.confirm('삭제하시겠습니까?')) {
         axios.post(urlRemove, {SEQ:SEQ})
         .then((data) => {
@@ -97,135 +97,35 @@ const UserList = ({props, posts, loading, Aposts, Mposts, Uposts}) => {
 
   return (      
     <>
-      {/* {posts.map((post) => 
-      {
-      if(post.USERTYPE === 'A') {
-          return (
+   
+
+          {/* {posts && posts.map((post) => {
+            return (
               <tr key={post.SEQ} >
-          <td style={{cursor:'pointer'}} >{post.LOGINID}</td>
-          <td style={{cursor:'pointer'}}>{post.USERTYPE}관리자</td>
-          <td>{post.CREATED}</td>
-          <td>{post.MODIFIED}</td>
-          <td><p style={{display:'block', cursor:'pointer'}}><i class="far fa-edit"></i></p></td>
-          <td><p  style={{display:'block', cursor:'pointer'}}><i className="far fa-trash-alt"></i></p></td>
-          </tr>
+                <td >{post.LOGINID}</td>
+                <td>{post.USERTYPE}</td>
+                <td>{moment(post.CREATED).format('YYYY-MM-DD hh:mm:ss')}</td>
+                <td>{moment(post.MODIFIED).format('YYYY-MM-DD hh:mm:ss')}</td>
+                <td><p onClick={(e) => editChange(post.SEQ)} style={{display:'block', cursor:'pointer'}}><i class="far fa-edit"></i></p></td>
+                <td><p onClick={(e) => removeUser(post.SEQ)} style={{display:'block', cursor:'pointer'}}><i className="far fa-trash-alt"></i></p></td>
+              </tr>
+            )
+            } 
+          )}  */}
 
-          );
-      }
-        else if(post.USERTYPE === 'M') {
-          return (
+          {posts && posts.filter(post => post.USERTYPE === types).map((post) => {
+            return (
               <tr key={post.SEQ} >
-          <td style={{cursor:'pointer'}} >{post.LOGINID}</td>
-          <td style={{cursor:'pointer'}}>{post.USERTYPE}마트관리자</td>
-          <td>{post.CREATED}</td>
-          <td>{post.MODIFIED}</td>
-          <td><p style={{display:'block', cursor:'pointer'}}><i class="far fa-edit"></i></p></td>
-          <td><p  style={{display:'block', cursor:'pointer'}}><i className="far fa-trash-alt"></i></p></td>
-          </tr>
-
-          );
-      } else if(post.USERTYPE === 'U') {
-        return (
-            <tr key={post.SEQ} >
-        <td style={{cursor:'pointer'}} >{post.LOGINID}</td>
-        <td style={{cursor:'pointer'}}>{post.USERTYPE}구직자</td>
-        <td>{post.CREATED}</td>
-        <td>{post.MODIFIED}</td>
-        <td><p style={{display:'block', cursor:'pointer'}}><i class="far fa-edit"></i></p></td>
-        <td><p  style={{display:'block', cursor:'pointer'}}><i className="far fa-trash-alt"></i></p></td>
-        </tr>
-
-        );
-    }
-      
-      }
-      )} */}
-
-
-         {Aposts && Aposts.map((post) => {
-          return (
-            <tr key={post.SEQ} >
-              <td >{post.LOGINID}</td>
-
-              <td>{post.USERTYPE} 관리자</td>
-              
-              <td>{moment(post.CREATED).format('YYYY-MM-DD hh:mm:ss')}</td>
-              <td>{moment(post.MODIFIED).format('YYYY-MM-DD hh:mm:ss')}</td>
-              <td><p onClick={(e) => editChange(post.SEQ)} style={{display:'block', cursor:'pointer'}}><i class="far fa-edit"></i></p></td>
-              <td><p onClick={(e) => removeUser(post.SEQ)} style={{display:'block', cursor:'pointer'}}><i className="far fa-trash-alt"></i></p></td>
-            </tr>
-          )
-          } 
-        )} 
-
-        {Mposts && Mposts.map((post) => {
-          return (
-            <tr key={post.SEQ} >
-              <td >{post.LOGINID}</td>
-              <td>{post.USERTYPE} 마트관리자</td>
-              <td>{moment(post.CREATED).format('YYYY-MM-DD hh:mm:ss')}</td>
-              <td>{moment(post.MODIFIED).format('YYYY-MM-DD hh:mm:ss')}</td>
-              <td><p onClick={(e) => editChange(post.SEQ)} style={{display:'block', cursor:'pointer'}}><i class="far fa-edit"></i></p></td>
-              <td><p onClick={(e) => removeUser(post.SEQ)} style={{display:'block', cursor:'pointer'}}><i className="far fa-trash-alt"></i></p></td>
-            </tr>
-          )
-          } 
-        )} 
-
-        {Uposts && Uposts.map((post) => {
-          return (
-            <tr key={post.SEQ} >
-              <td >{post.LOGINID}</td>
-              <td>{post.USERTYPE} 구직자</td>
-              <td>{moment(post.CREATED).format('YYYY-MM-DD hh:mm:ss')}</td>
-              <td>{moment(post.MODIFIED).format('YYYY-MM-DD hh:mm:ss')}</td>
-              <td><p onClick={(e) => editChange(post.SEQ)} style={{display:'block', cursor:'pointer'}}><i class="far fa-edit"></i></p></td>
-              <td><p onClick={(e) => removeUser(post.SEQ)} style={{display:'block', cursor:'pointer'}}><i className="far fa-trash-alt"></i></p></td>
-            </tr>
-          )
-          } 
-        )} 
-        
-
-  {/* {posts && posts.map((post) => {
-        if(USERTYPE === 'A') {
-          return (
-            <tr key={post.SEQ} >
-              <td >{post.LOGINID}</td>
-              <td>{post.USERTYPE}</td>
-              <td>{moment(post.CREATED).format('YYYY-MM-DD hh:mm:ss')}</td>
-              <td>{moment(post.MODIFIED).format('YYYY-MM-DD hh:mm:ss')}</td>
-              <td><p onClick={(e) => editChange(post.SEQ)} style={{display:'block', cursor:'pointer'}}><i class="far fa-edit"></i></p></td>
-              <td><p onClick={(e) => removeUser(post.SEQ)} style={{display:'block', cursor:'pointer'}}><i className="far fa-trash-alt"></i></p></td>
-            </tr>
-          );
-        } else if(USERTYPE === 'M') {
-          return (
-            <tr key={post.SEQ} >
-              <td >{post.LOGINID}</td>
-              <td>{post.USERTYPE}</td>
-              <td>{moment(post.CREATED).format('YYYY-MM-DD hh:mm:ss')}</td>
-              <td>{moment(post.MODIFIED).format('YYYY-MM-DD hh:mm:ss')}</td>
-              <td><p onClick={(e) => editChange(post.SEQ)} style={{display:'block', cursor:'pointer'}}><i class="far fa-edit"></i></p></td>
-              <td><p onClick={(e) => removeUser(post.SEQ)} style={{display:'block', cursor:'pointer'}}><i className="far fa-trash-alt"></i></p></td>
-            </tr>
-          );
-        } else if(USERTYPE === 'U') {
-          return (
-            <tr key={post.SEQ} >
-              <td >{post.LOGINID}</td>
-              <td>{post.USERTYPE}</td>
-              <td>{moment(post.CREATED).format('YYYY-MM-DD hh:mm:ss')}</td>
-              <td>{moment(post.MODIFIED).format('YYYY-MM-DD hh:mm:ss')}</td>
-              <td><p onClick={(e) => editChange(post.SEQ)} style={{display:'block', cursor:'pointer'}}><i class="far fa-edit"></i></p></td>
-              <td><p onClick={(e) => removeUser(post.SEQ)} style={{display:'block', cursor:'pointer'}}><i className="far fa-trash-alt"></i></p></td>
-            </tr>
-          );
-        }
-        }
-          
-      )} */}
-
+                <td >{post.LOGINID}</td>
+                <td>{post.USERTYPE}</td>
+                <td>{moment(post.CREATED).format('YYYY-MM-DD hh:mm:ss')}</td>
+                <td>{moment(post.MODIFIED).format('YYYY-MM-DD hh:mm:ss')}</td>
+                <td><p onClick={(e) => editChange(post.SEQ)} style={{display:'block', cursor:'pointer'}}><i class="far fa-edit"></i></p></td>
+                <td><p onClick={(e) => removeUser(post.SEQ)} style={{display:'block', cursor:'pointer'}}><i className="far fa-trash-alt"></i></p></td>
+              </tr>
+            )
+            } 
+          )} 
 
 
       
@@ -242,7 +142,7 @@ const UserList = ({props, posts, loading, Aposts, Mposts, Uposts}) => {
 
             <FormGroup>
               <Label>비밀번호를 입력하세요.</Label>
-              <Input  name='PWD' onChange={(e) => setPWD(e.target.value)} type="textarea" />
+              <Input  name='PWD' onChange={(e) => setPWD(e.target.value)}  />
             </FormGroup>
             
           </ModalBody>
