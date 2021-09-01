@@ -250,6 +250,7 @@ function MartList({ posts, loading, props }) {
         <>
           {posts && posts.map((post) => (
             <tr key={post.SEQ} >
+              {/* <td>{post.SEQ}</td> */}
                 <td>{post.NAME}</td>
                 <td><img src={'http://localhost:3000/api/files/get/'+post.LOGOFILE} alt={LOGOFILE} name={LOGOFILE} />  </td>
                 <td>{post.REGNO}</td>
@@ -266,7 +267,7 @@ function MartList({ posts, loading, props }) {
 
              {/* 수정모달 */}
          <Modal isOpen={editModal} toggle={editToggle} backdrop={false} >
-            <ModalHeader charCode="X" toggle={editToggle}>마트 수정</ModalHeader>
+            <ModalHeader>마트 수정</ModalHeader>
             <ModalBody>
             <Input type='hidden' value={SEQ} name="SEQ" onChange={onChange} />
             
@@ -345,7 +346,7 @@ function MartList({ posts, loading, props }) {
         
         {/* 마트 로고 수정 */}
         <Modal isOpen={imgModal} toggle={imgToggle} backdrop={false} >
-            <ModalHeader charCode="X" toggle={imgToggle}></ModalHeader>
+            <ModalHeader></ModalHeader>
             <ModalBody>
                 <Row>
                     <Col md="12">

@@ -26,7 +26,7 @@ import moment from "moment";
 
 const thead = ["아이디", "구분", "생성일", "수정일"];
 
-const UserList = ({props, posts, loading, Aposts, Mposts, Uposts, types, names}) => {
+const UserList = ({props, posts, types}) => {
 
 
     // users
@@ -92,7 +92,7 @@ const UserList = ({props, posts, loading, Aposts, Mposts, Uposts, types, names})
     }
 }
     
-
+  
 
 
   return (      
@@ -117,7 +117,13 @@ const UserList = ({props, posts, loading, Aposts, Mposts, Uposts, types, names})
             return (
               <tr key={post.SEQ} >
                 <td >{post.LOGINID}</td>
-                <td>{post.USERTYPE}</td>
+                {
+                  (() => {
+                    if(post.USERTYPE === 'A') return (<td>관리자</td>);
+                    if(post.USERTYPE === 'M') return (<td>마트 관리자</td>);
+                    if(post.USERTYPE === 'U') return (<td>구직자</td>);
+                  })()
+                }
                 <td>{moment(post.CREATED).format('YYYY-MM-DD hh:mm:ss')}</td>
                 <td>{moment(post.MODIFIED).format('YYYY-MM-DD hh:mm:ss')}</td>
                 <td><p onClick={(e) => editChange(post.SEQ)} style={{display:'block', cursor:'pointer'}}><i class="far fa-edit"></i></p></td>
@@ -132,7 +138,7 @@ const UserList = ({props, posts, loading, Aposts, Mposts, Uposts, types, names})
 
         {/* 수정모달 */}
         <Modal isOpen={modal} toggle={toggle} backdrop={false} >
-          <ModalHeader charCode="X" toggle={toggle}>사용자 수정</ModalHeader>
+          <ModalHeader>사용자 수정</ModalHeader>
           <ModalBody>
             <Input type='hidden' value={SEQ} name="SEQ" onChange={(e) => setSEQ(e.target.value)} />
             <FormGroup>

@@ -17,9 +17,6 @@ const thead = ["아이디", "구분", "생성일", "수정일"];
 const RegularTables = ({props}) => {
 
     const [posts, setPosts] = useState([]);
-    const [Aposts, setAPosts] = useState([]);
-    const [Mposts, setMPosts] = useState([]);
-    const [Uposts, setUPosts] = useState([]);
     const [refresh, setRefresh] = useState(0);
     // users
     const [SEQ, setSEQ] = useState('');
@@ -46,7 +43,7 @@ const RegularTables = ({props}) => {
     // 페이지
     const [loading, setLoading] = useState(false);
     const [currentPage, setCurrentPage] = useState(1);
-    const [postsPerPage] = useState(11);
+    const [postsPerPage] = useState(10);
     const [totalCount, setTotalCount] = useState("");
 
     const [types, setTypes] = useState('');
@@ -54,12 +51,6 @@ const RegularTables = ({props}) => {
     const [filterType, setFilterType] = useState(posts);
     
     const url = 'http://localhost:3000/api/users/reactlist';
-
-    const obj = {
-      0: USERTYPE === 'A',
-      1: USERTYPE === 'M',
-      2: USERTYPE === 'U',
-    }
 
     useEffect(() => {
       setLoading(true);
@@ -74,15 +65,16 @@ const RegularTables = ({props}) => {
     
 
 
-    const ResumetList  = async () => {
-      setLoading(true);
-      axios.post("http://localhost:3000/api/users/reactlist")
-          .then((res) => {
-          setPosts(res.data.data.list);
-          setLoading(false);
-          setLOGINID('');
-          setRefresh(oldkey => oldkey +1);
-      });
+  const ResumetList  = async () => {
+    // setLoading(true);
+    axios.post(url)
+        .then((res) => {
+        setPosts(res.data.data.list);
+        setTotalCount(res.data.data.totalCount);
+        // setLoading(false);
+        setLOGINID('');
+        setRefresh(oldkey => oldkey +1);
+    });
   };
   function getRegions() {
     const query = 'input[name="USERTYPE"]:checked';
@@ -97,11 +89,8 @@ const RegularTables = ({props}) => {
     // 검색 버튼
     const SearchButton = () => {
     setLoading(true);
-    // setLOGINID('');
-    let testType = ['A', 'M', 'U'];
-    axios.post("http://localhost:3000/api/users/reactlist",{
+    axios.post(url,{
         LOGINID: LOGINID,
-        USERTYPE: posts.USERTYPE,
     })
       .then((res) => {
         setPosts(res.data.data.list);
@@ -159,17 +148,15 @@ const RegularTables = ({props}) => {
     setPWD('');
   }
 
-  const Atypes = posts.filter((post) => {
-    return post.USERTYPE === 'A'
-    
-  });
-  const Mtypes = posts.filter((post) => {
-    return post.USERTYPE === 'M'
-  });
-  // console.log(Mposts)
-  const Utypes = posts.filter((post) => {
-    return post.USERTYPE === 'U'
-  });
+  const Atypes = posts !== null ? posts.filter((post) => {
+    return (post.USERTYPE === 'A' ) 
+  }) : [];
+  const Mtypes = posts !== null ? posts.filter((post) => {
+    return (post.USERTYPE === 'M' ) 
+  }) : [];
+  const Utypes = posts !== null ? posts.filter((post) => {
+    return (post.USERTYPE === 'U' ) 
+  }) : [];
 
 
     const indexOfLastPost = currentPage * postsPerPage;
@@ -187,11 +174,15 @@ const RegularTables = ({props}) => {
   return (
     <>
       <PanelHeader size="sm" />
+      
       <div >
 
       <Row style={{justifyContent:'center', margin:'0 auto', alignItems:'center', marginBottom:'40px'}}>
                 <Col md="11" className='text'>
                     <Card>
+                    <CardHeader>
+                        <CardTitle tag="h4">사용자 관리</CardTitle>
+                      </CardHeader>
                         <CardBody>
                             <Row>
                                 <Label md="2">아이디</Label>
@@ -307,7 +298,7 @@ const RegularTables = ({props}) => {
                           </Table>
                       </CardBody>
                       <CardFooter>
-                      <Pagination className="ant-pagination d-flex justify-content-center" total={totalCount} current={currentPage} pageSize={postsPerPage}  />
+                      <Pagination className="ant-pagination d-flex justify-content-center" total={totalCount} current={currentPage} pageSize={postsPerPage} onChange={(page) => {setCurrentPage(page); console.log('totalcount'+totalCount.length, 'currentPage'+currentPage)}} />
                       </CardFooter>
                     </Card>
                 </Col>
