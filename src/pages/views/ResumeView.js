@@ -119,7 +119,9 @@ const ResumeView = () => {
                                         toggleTab("1");
                                     }}
                                 >
-                                    <NavLink>이력서 내용</NavLink>
+                                    {/* <NavLink>
+                                        </NavLink> */}
+                                        이력서 내용
                                 </NavLink>
                             </NavItem>
                             <NavItem xs={12}>
@@ -129,7 +131,9 @@ const ResumeView = () => {
                                         toggleTab("2");
                                     }}
                                 >
-                                    <NavLink>결력 사항</NavLink>
+                                    {/* <NavLink>
+                                        </NavLink> */}
+                                        경력 사항
                                 </NavLink>
                             </NavItem>
                         </Nav>
@@ -146,12 +150,12 @@ const ResumeView = () => {
                                                     <Col md={6}>
                                                         <div className="widget-bg-color-icon card-box">
                                                             <div className="text-center">
-                                                                <h3 className="text-dark"><b> {(resumeDetailData.CERTIFICATE == 'Y')? 'CERTIFICATED' : 'WAIT'}</b></h3>                                                                
-                                                                <p className="text-muted">{(resumeDetailData.CERTIFICATE == 'Y') 
+                                                                <h3 className="text-dark"><b> {(resumeDetailData.CERTIFICATE === 'Y')? 'CERTIFICATED' : 'WAIT'}</b></h3>                                                                
+                                                                <p className="text-muted">{(resumeDetailData.CERTIFICATE === 'Y') 
                                                                 ? moment(resumeDetailData.CERTIFICATEDATE).format('YYYY-MM-DD') 
                                                                 : '아직 검증되지 않았습니다'}</p>
                                                                 {
-                                                                    (resumeDetailData.CERTIFICATE == 'Y') 
+                                                                    (resumeDetailData.CERTIFICATE === 'Y') 
                                                                     ? <p><Button type="button" className="btn btn-warning waves-effect w-md waves-light m-t-5" onClick={ButtonCertificateCancel}>검증 취소</Button></p> 
                                                                     : <p><Button type="button" className="btn btn-warning waves-effect w-md waves-light m-t-5" onClick={ButtonCertificate}>검증 완료</Button></p>
                                                                 }
@@ -212,8 +216,8 @@ const ResumeView = () => {
                                         <Card>
                                             <CardBody>
                                                 <Table>
-                                                    <thead className="text-primary">
-                                                        <tr>
+                                                    <tbody>
+                                                        <tr className="text-primary">
                                                             <th className="text-center">근무처</th>
                                                             <th className="text-center">근무기간</th>
                                                             <th className="text-center">직급/직책</th>
@@ -222,8 +226,6 @@ const ResumeView = () => {
                                                             <th className="text-right">담당업무</th>
                                                             <th className="text-right">최종연봉</th>
                                                         </tr>
-                                                    </thead>
-                                                    <tbody>
                                                         <CareerLists careerListData={careerListData}></CareerLists>
                                                     </tbody>
                                                 </Table>
@@ -242,50 +244,50 @@ const ResumeView = () => {
                                 {resumeDetailData.PHOTO ? <img src={"http://localhost:3000/api/files/get/" + resumeDetailData.PHOTO} alt="profile-image" /> : <h3>{resumeDetailData.NAME}</h3>}
                             </Col>
 
-                            <div class="text-left m-t-40">
-                                <p class="text-muted font-13">
-                                    <strong>이름 :</strong> <span class="m-l-15">{resumeDetailData.NAME}</span>
+                            <div className="text-left m-t-40">
+                                <p className="text-muted font-13">
+                                    <strong>이름 :</strong> <span className="m-l-15">{resumeDetailData.NAME}</span>
                                 </p>
-                                <p class="text-muted font-13">
+                                <p className="text-muted font-13">
                                     <strong>나이 :</strong>{" "}
-                                    <span class="m-l-15">
+                                    <span className="m-l-15">
                                         {resumeDetailData.BIRTHYEAR} ({resumeDetailData.BIRTHYEAR ? new Date().getFullYear() - resumeDetailData.BIRTHYEAR : ""})
                                     </span>
                                 </p>
-                                <p class="text-muted font-13">
+                                <p className="text-muted font-13">
                                     <strong>성별 :</strong>
-                                    <span class="m-l-15">{resumeDetailData.GENDER}</span>
+                                    <span className="m-l-15">{resumeDetailData.GENDER}</span>
                                 </p>
                             </div>
                             <br></br>
-                            <div class="text-left m-t-40">
-                                <p class="text-muted font-13">
+                            <div className="text-left m-t-40">
+                                <p className="text-muted font-13">
                                     <strong>우편번호 :</strong>
-                                    <span class="m-l-15">{resumeDetailData.POSTCODE}</span>
+                                    <span className="m-l-15">{resumeDetailData.POSTCODE}</span>
                                 </p>
-                                <p class="text-muted font-13">
+                                <p className="text-muted font-13">
                                     <strong>주소 :</strong>{" "}
-                                    <span class="m-l-15">
+                                    <span className="m-l-15">
                                         {resumeDetailData.ADDRESS} {resumeDetailData.ADDRESSEXTRA}
                                     </span>
                                 </p>
-                                <p class="text-muted font-13">
-                                    <strong>연락처 :</strong> <span class="m-l-15">{resumeDetailData.CONTACT}</span>
+                                <p className="text-muted font-13">
+                                    <strong>연락처 :</strong> <span className="m-l-15">{resumeDetailData.CONTACT}</span>
                                 </p>
-                                <p class="text-muted font-13">
-                                    <strong>이메일 :</strong> <span class="m-l-15">{resumeDetailData.EMAIL}</span>
+                                <p className="text-muted font-13">
+                                    <strong>이메일 :</strong> <span className="m-l-15">{resumeDetailData.EMAIL}</span>
                                 </p>
                             </div>
 
-                            <div class="text-left m-t-40">
-                                <p class="text-muted font-13">
-                                    <strong>등록일 :</strong> <span class="m-l-15">{moment(resumeDetailData.CREATED).format("YYYY-MM-DD hh:mm:ss")}</span>
+                            <div className="text-left m-t-40">
+                                <p className="text-muted font-13">
+                                    <strong>등록일 :</strong> <span className="m-l-15">{moment(resumeDetailData.CREATED).format("YYYY-MM-DD hh:mm:ss")}</span>
                                 </p>
-                                <p class="text-muted font-13">
-                                    <strong>수정일 :</strong> <span class="m-l-15">{moment(resumeDetailData.MODIFIED).format("YYYY-MM-DD hh:mm:ss")}</span>
+                                <p className="text-muted font-13">
+                                    <strong>수정일 :</strong> <span className="m-l-15">{moment(resumeDetailData.MODIFIED).format("YYYY-MM-DD hh:mm:ss")}</span>
                                 </p>
-                                <p class="text-muted font-13">
-                                    <strong>상태 :</strong> <span class="m-l-15">{resumeDetailData.ACTIVE == "Y" ? "게시 중" : "게시 중단"}</span>
+                                <p className="text-muted font-13">
+                                    <strong>상태 :</strong> <span className="m-l-15">{resumeDetailData.ACTIVE === "Y" ? "게시 중" : "게시 중단"}</span>
                                 </p>
                             </div>
                         </Row>

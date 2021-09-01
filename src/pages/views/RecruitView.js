@@ -189,7 +189,7 @@ const RecruitView = () => {
                                                     <h5>상태</h5>
                                                     <p><b>등록일 :</b>{moment(recruitDetailData.CREATED).format('YYYY-MM-DD hh:mm:ss')}</p>
                                                     <p><b>수정일 : </b>{moment(recruitDetailData.MODIFIED).format('YYYY-MM-DD hh:mm:ss')}</p>
-                                                    <p><b>상태 : </b>{(recruitDetailData.ACTIVE == 'Y') ? '게시 중' : '게시 중단'}</p>
+                                                    <p><b>상태 : </b>{(recruitDetailData.ACTIVE === 'Y') ? '게시 중' : '게시 중단'}</p>
                                                     </Col>
                                                 </Row>
                                             </CardBody>
@@ -205,8 +205,8 @@ const RecruitView = () => {
                                         <Card>
                                             <CardBody>
                                                 <Table>
-                                                    <thead className="text-primary">
-                                                        <tr>
+                                                    <tbody>
+                                                        <tr className="text-primary">
                                                             <th className="text-center">이름</th>
                                                             <th className="text-center">연락처</th>
                                                             <th className="text-center">주소</th>
@@ -215,8 +215,6 @@ const RecruitView = () => {
                                                             <th className="text-center">인증여부</th>                            
                                                             <th className="text-center">지원일</th>
                                                         </tr>
-                                                    </thead>
-                                                    <tbody>
                                                         {listForRecruits 
                                                             ? listForRecruits.map((data) => {
                                                                 return (
@@ -231,7 +229,7 @@ const RecruitView = () => {
                                                                     </tr>
                                                                 )
                                                             })
-                                                            : ''
+                                                            : <tr></tr>
                                                         } 
                                                     </tbody>
                                                 </Table>
@@ -297,7 +295,7 @@ const RecruitView = () => {
                                     <strong>수정일 :</strong> <span className="m-l-15">{moment(martInfo.MODIFIED).format("YYYY-MM-DD hh:mm:ss")}</span>
                                 </p>
                                 <p className="text-muted font-13">
-                                    <strong>상태 :</strong> <span className="m-l-15">{martInfo.ACTIVE == "Y" ? "게시 중" : "게시 중단"}</span>
+                                    <strong>상태 :</strong> <span className="m-l-15">{martInfo.ACTIVE === "Y" ? "게시 중" : "게시 중단"}</span>
                                 </p>
                             </div>
 
@@ -305,7 +303,7 @@ const RecruitView = () => {
                                 <div className="font-icon-detail">
                                     <i className="users_single-02"></i>
                                 </div>
-                                <div class="text-right">
+                                <div className="text-right">
                                     <h4 className="text-dark">
                                         <b>{
                                     (listForRecruits) ? listForRecruits.length : '0'}</b>

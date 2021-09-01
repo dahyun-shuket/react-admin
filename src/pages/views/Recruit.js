@@ -176,6 +176,7 @@ const Recruit = () => {
                         <Card>
                             <CardBody>
                                 <Table responsive>
+                                    <tbody>
                                     <tr className="text-primary">
                                         <th className="text-center">마트이름</th>
                                         <th className="text-center">공고</th>
@@ -188,7 +189,6 @@ const Recruit = () => {
                                         <th className="text-center">상태</th>
                                         <th className="text-center">수정일</th>
                                     </tr>
-                                    <tbody>
                                         <RecruitLists recruitLists={currentPosts} />
                                     </tbody>
                                 </Table>

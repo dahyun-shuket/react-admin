@@ -167,7 +167,7 @@ const Resume = () => {
                                         <FormGroup check>
                                             {jobKinds.map((data, index) => {
                                                 return (
-                                                    <Label check>
+                                                    <Label key={index} check>
                                                         <Input type="checkbox" name="jobkind" value={index + 1} id={'jobkind'+(index + 1)}
                                                             onChange={(e) => {
                                                                 jobkindChangeHandler(e.currentTarget.checked, index + 1);
@@ -214,6 +214,7 @@ const Resume = () => {
                         <Card>
                             <CardBody>
                                 <Table responsive>
+                                <tbody>
                                     <tr className="text-primary">
                                         <th className="text-center">이름</th>
                                         <th className="text-center">연락처</th>
@@ -225,7 +226,6 @@ const Resume = () => {
                                         <th className="text-center">파일</th>
                                         <th className="text-center">수정일</th>
                                     </tr>
-                                    <tbody>
                                         <ResumeLists resumeLists={currentPosts} />
                                     </tbody>
                                 </Table>
