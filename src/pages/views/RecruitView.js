@@ -245,7 +245,9 @@ const RecruitView = () => {
                     <Card>
                         <Row>
                             <Col className="text-center">
-                                {(martInfo.LOGOFILE) ? <img src={"http://localhost:3000/api/files/get/" + martInfo.LOGOFILE} alt="profile-image" /> : <h3>{martInfo.NAME}</h3>}
+                                {(martInfo.LOGOFILE) 
+                                ? <img src={"http://localhost:3000/api/files/get/" + martInfo.LOGOFILE} alt="profile-image" /> 
+                                : <h3>{martInfo.NAME}</h3>}
                                 <p className="text-muted">{martInfo.REGNO}</p>
                             </Col>
 

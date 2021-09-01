@@ -94,6 +94,7 @@ const Resume = () => {
             })
             .then((response) => {
                 setResumeLists(response.data.data.list);
+                setTotalCount(response.data.data.totalCount);
                 setLoading(false);
             });
     };
