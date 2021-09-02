@@ -15,7 +15,7 @@ const Mart = (props) => {
     const [posts, setPosts] = useState([]);
     const [loading, setLoading] = useState(false);
     const [currentPage, setCurrentPage] = useState(1);
-    const [postsPerPage] = useState(2);
+    const [postsPerPage] = useState(10);
     const [totalCount, setTotalCount] = useState("");
     const [NAME, setNAME] = useState('');
     const [ADDRESS, setADDRESS] = useState('');
@@ -114,9 +114,9 @@ const MartSearchReset = async () => {
     const indexOfFirstPost = indexOfLastPost - postsPerPage;
     const currentPosts = posts != null ? posts.slice(indexOfFirstPost, indexOfLastPost) : [];
 
-    if (loading) {
-      return <h2>Loading...</h2>;
-  }
+  //   if (loading) {
+  //     return <h2>Loading...</h2>;
+  // }
 
 
     const mediaUrl = 'C:/Users/yydh5/OneDrive/문서/mart-recruit-api/PDSData/uploads/undefined/';
@@ -124,27 +124,37 @@ const MartSearchReset = async () => {
         <>
           <PanelHeader size="sm" />
           <div className="content">
+          <div >
+
+<Row style={{justifyContent:'center', margin:'0 auto', alignItems:'center', marginBottom:'40px'}}>
+    <Col md="12" className='text'>
+        <Card>
+          <CardHeader>
+            <CardTitle tag="h4">마트 관리</CardTitle>
+            
+          </CardHeader>
+            <CardBody>
+                <Row>
+                    <Col md='12'>
+                        <InputGroup className="no-border">
+                          <Input  placeholder="Search..." value={NAME} onChange={({ target: { value } }) => setNAME(value)} />
+                          
+                        </InputGroup>
+                    </Col>
+                </Row>
+            </CardBody>
+            <CardFooter>
+                <Button onClick={SearchButton} className='btn-info' style={{marginRight:'10px'}}>검색</Button>
+                <Button onClick={MartSearchReset} className='btn-info'>조건 리셋</Button>
+                {/* <Button color="info" onClick={toggle} style={{float:'right'}} >추가 <i class="fa fa-plus"></i></Button> */}
+            </CardFooter>
+        </Card>
+    </Col>
+</Row>
+</div>
             <Row>
               <Col xs={12}>
-                <Card>
-                  <CardHeader>
-                    <CardTitle tag="h4">마트 관리
-                    {/* <button onClick={toggle} >추가</button> */}
-                    </CardTitle>
-                  </CardHeader>
-
-                  <CardBody >
-                  <Row>
-                    <Col className="pr-1" md="9">
-                    <InputGroup className="no-border">
-                          <Input  placeholder="Search..." value={NAME} onChange={({ target: { value } }) => setNAME(value)} />
-                          <Button  onClick={SearchButton} className='btn-info'>검색</Button>
-                          <Button className='btn-info' onclick={MartSearchReset}>조건 리셋</Button>
-                      </InputGroup>
-                    </Col>
-                  </Row>
-                  </CardBody>
-                  
+                <Card>                  
                   <CardBody>
                     <Table responsive>
                       <thead className="text-primary">
@@ -176,7 +186,7 @@ const MartSearchReset = async () => {
 
            {/* 생성모달 */}
           <Modal isOpen={modal} toggle={toggle} backdrop={false} >
-            <ModalHeader charCode="X" toggle={toggle}>목록 추가</ModalHeader>
+            <ModalHeader>목록 추가</ModalHeader>
             <ModalBody>
               <FormGroup>
                 <Label>제목을 입력하세요</Label>

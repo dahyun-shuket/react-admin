@@ -17,7 +17,7 @@ import Select from "react-select";
 
 
 
-const thead = ["제목", "내용", "수정일"];
+const thead = ["제목", "작성자", "수정일"];
 const urlList = 'http://localhost:3000/api/notice/reactlist';
 
 
@@ -28,7 +28,7 @@ const NoticeTables = ({props}) => {
     const [loading, setLoading] = useState(false);
 
     const [currentPage, setCurrentPage] = useState(1);
-    const [postsPerPage] = useState(10);
+    const [postsPerPage] = useState(100);
     const [totalCount, setTotalCount] = useState("");
     
     const [SUBJECT, setSUBJECT] = useState('');
@@ -40,9 +40,8 @@ const NoticeTables = ({props}) => {
     
 
     let selectOptions = [
-      {value: '' , label: '전체 검색'},
-      {value: SUBJECT , label: '제목 검색'},
-      {value: CONTENT , label: '내용 검색'},
+      {value: posts !== null ?  posts.SUBJECT : [] , label: '제목 검색'},
+      {value: posts !== null ?  posts.CONTENT : [] , label: '내용 검색'},
     ];
     // console.log('SUBJECT ?? '+JSON.stringify(selectOptions));
 
@@ -72,7 +71,7 @@ const NoticeTables = ({props}) => {
       axios.post("http://localhost:3000/api/notice/reactlist",{
           CONTENT: CONTENT,
           SUBJECT: SUBJECT,
-          // active: active,
+          active: active,
       })
           .then((res) => {
           setPosts(res.data.data.list);
@@ -100,7 +99,7 @@ const NoticeTables = ({props}) => {
       
       setSUBJECT(value) 
       setCONTENT(value) 
-     
+    
     }
 
     // 생성 추가
@@ -134,9 +133,9 @@ const NoticeTables = ({props}) => {
   const indexOfFirstPost = indexOfLastPost - postsPerPage;
   const currentPosts = posts != null ? posts.slice(indexOfFirstPost, indexOfLastPost) : [];
 
-    if (loading) {
-      return <h2>Loading...</h2>;
-  }
+  //   if (loading) {
+  //     return <h2>Loading...</h2>;
+  // }
   
   return (
     <>
@@ -155,27 +154,25 @@ const NoticeTables = ({props}) => {
                         <CardBody>
                             <Row>
                                 <Col md='2'>
-                                  <Select
+                                  {/* <Select
                                     className="react-select primary"
                                     classNamePrefix="react-select"
-                                    value={selectOptions.find(op => { // choice state에 따라 디폴트 option 세팅 
-                                    return op.value === active })} 
+                                    value={selectOptions.find((op) => { // choice state에 따라 디폴트 option 세팅 
+                                    return op.value === active; })} 
                                     placeholder="선택해주세요." 
-                                    onChange={(value) => { onChange(value); }} options={selectOptions}
-                                  />
-                                  {/* <Input type='select' value={SUBJECT || CONTENT} >
-                                      <option value={SUBJECT || CONTENT}>전체 검색</option>
-                                      <option value={SUBJECT}>제목 검색</option>
-                                      <option value={CONTENT}>내용 검색</option>
-                                  </Input> */}
+                                    onChange={(value) => { onChange(value.value); }} 
+                                    options={selectOptions}
+                                  /> */}
+                                  <p>공지사항 검색</p>
                                 </Col>
                                 <Col md='7'>
                                     <InputGroup className="no-border">
                                       {/* ({ target: { value } }) => setName(value) */}
                                       <Input  placeholder="Search..." id='searchInput'  onChange={ ( {target: {value}} ) => {setSUBJECT(value)  }   } />
+                                      {/* <Input  placeholder="Search..." id='searchInput'  /> */}
                                     </InputGroup>
                                 </Col>
-                                <Col md='3' style={{border:'1px solid yellow'}}>
+                                <Col md='3' >
                                   <Button onClick={SearchButton} className='btn-info' style={{marginRight:'10px'}}>검색</Button>
                                   <Button onClick={SearchReset} className='btn-info'>조건 리셋</Button>
                                 </Col>
@@ -235,7 +232,7 @@ const NoticeTables = ({props}) => {
       
        {/* 생성모달 */}
        <Modal isOpen={modal} toggle={toggle} backdrop={false} >
-        <ModalHeader charCode="X" toggle={toggle}>목록 추가</ModalHeader>
+        <ModalHeader>공지 사항 추가</ModalHeader>
         <ModalBody>
           <FormGroup>
             <Label>제목을 입력하세요</Label>
