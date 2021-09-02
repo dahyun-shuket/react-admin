@@ -81,8 +81,6 @@ const Resume = () => {
         return checkJobKind;
     }
 
-    // ResetButton
-
     const SearchButton = async () => {
         setLoading(true);
         axios
@@ -98,6 +96,7 @@ const Resume = () => {
                 setLoading(false);
             });
     };
+
     const ResetButton = () => {
         setName("");
         setCertificate("");
@@ -109,6 +108,7 @@ const Resume = () => {
     useEffect(() => {
         ResumetList();
     }, []);
+
     // Get current posts
     const indexOfLastPost = currentPage * postsPerPage;
     const indexOfFirstPost = indexOfLastPost - postsPerPage;
@@ -233,6 +233,8 @@ const Resume = () => {
                             </CardBody>
                         </Card>
                     </Col>
+                    {/* pagination
+                https://pagination-react-component.vercel.app/demo/more */}
                     <Pagination 
                         className="ant-pagination d-flex justify-content-center" 
                         total={totalCount} 

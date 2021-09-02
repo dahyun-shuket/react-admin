@@ -196,6 +196,8 @@ const Recruit = () => {
                         </Card>
                     </Col>
                 </Row>
+                {/* pagination
+                https://pagination-react-component.vercel.app/demo/more */}
                 <Pagination className="ant-pagination d-flex justify-content-center" total={totalCount} current={currentPage} pageSize={postsPerPage} onChange={(page) => setCurrentPage(page)} />
             </div>
         </>
