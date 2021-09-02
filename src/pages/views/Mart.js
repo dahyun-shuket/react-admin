@@ -20,6 +20,7 @@ const Mart = (props) => {
     const [NAME, setNAME] = useState('');
     const [ADDRESS, setADDRESS] = useState('');
     const [RENGO, setRENGO] = useState('');
+    const [userSeq, setUserSeq] = useState('');
 
     const [refresh, setRefresh] = useState(0);
 
@@ -33,6 +34,7 @@ const Mart = (props) => {
         .then((res) => {
           setPosts(res.data.data.list);
           setTotalCount(res.data.data.totalCount);
+          setUserSeq(res.data.data.userSeq);
           setLoading(false);
           console.log('몇개인지 테스트', res.data.data.totalCount)
         })
@@ -72,10 +74,11 @@ const Mart = (props) => {
   // 생성 추가
   const createChange = () => {
     toggle();
-    axios.post('http://localhost:3000/api/mart/create', {NAME: NAME, ADDRESS:ADDRESS})
+    axios.post('http://localhost:3000/api/mart/create', {name: NAME, address:ADDRESS, userSeq:userSeq})
       .then((data) => {
         console.log('data:  ', data)
         if(data.data.result === 'success') {
+          console.log('create', data.data.list);
           alert('목록 생성 성공')
         } else if(data.data.result === 'fail') {
           alert('생성 실패')
@@ -105,10 +108,6 @@ const MartSearchReset = async () => {
       setRefresh(oldkey => oldkey +1);
     })
 };
-    // const indexOfLastPost = currentPage * postsPerPage;
-    // const indexOfFirstPost = indexOfLastPost - postsPerPage;
-    // const currentPosts = (posts !== null) ? posts.slice(indexOfFirstPost, indexOfLastPost) : [];
-    // const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
     const indexOfLastPost = currentPage * postsPerPage;
     const indexOfFirstPost = indexOfLastPost - postsPerPage;
@@ -118,8 +117,6 @@ const MartSearchReset = async () => {
   //     return <h2>Loading...</h2>;
   // }
 
-
-    const mediaUrl = 'C:/Users/yydh5/OneDrive/문서/mart-recruit-api/PDSData/uploads/undefined/';
     return (
         <>
           <PanelHeader size="sm" />
@@ -137,7 +134,7 @@ const MartSearchReset = async () => {
                 <Row>
                     <Col md='12'>
                         <InputGroup className="no-border">
-                          <Input  placeholder="Search..." value={NAME} onChange={({ target: { value } }) => setNAME(value)} />
+                          <Input  placeholder="Search..." onChange={({ target: { value } }) => setNAME(value)} />
                           
                         </InputGroup>
                     </Col>
@@ -146,7 +143,7 @@ const MartSearchReset = async () => {
             <CardFooter>
                 <Button onClick={SearchButton} className='btn-info' style={{marginRight:'10px'}}>검색</Button>
                 <Button onClick={MartSearchReset} className='btn-info'>조건 리셋</Button>
-                {/* <Button color="info" onClick={toggle} style={{float:'right'}} >추가 <i class="fa fa-plus"></i></Button> */}
+                <Button color="info" onClick={toggle} style={{float:'right'}} >추가 <i class="fa fa-plus"></i></Button>
             </CardFooter>
         </Card>
     </Col>
@@ -190,12 +187,12 @@ const MartSearchReset = async () => {
             <ModalBody>
               <FormGroup>
                 <Label>제목을 입력하세요</Label>
-                <Input value={NAME || ''} name='NAME' onChange={(e) => setNAME(e.target.value)} />
+                <Input  name='NAME' onChange={(e) => setNAME(e.target.value)} />
               </FormGroup>
 
               <FormGroup>
                 <Label>내용을 입력하세요</Label>
-                <Input  value={ADDRESS || ''} name='ADDRESS' onChange={(e) => setADDRESS(e.target.value)} type="textarea" />
+                <Input  name='ADDRESS' onChange={(e) => setADDRESS(e.target.value)}  />
               </FormGroup>
               
             </ModalBody>

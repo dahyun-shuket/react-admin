@@ -5,6 +5,8 @@ import { Button, Card, CardHeader, CardBody, UncontrolledTooltip,Modal,ModalHead
 import Select from "react-select";
 import axios from "axios";
 import moment from "moment";
+import secrectKey from'../../Utils/secretkey'
+import { getCookie } from "Utils/Cookie";
 
 const thead = ["제목","작성자", "수정일"];
 
@@ -54,7 +56,14 @@ const editChange = (SEQ) => {
   editToggle();
   const urlEdit = `http://localhost:3000/api/notice/update`;
   
-  axios.post(urlEdit, {SEQ:SEQ, SUBJECT:SUBJECT, CONTENT:CONTENT})
+  axios.post(urlEdit, {SEQ:SEQ, SUBJECT:SUBJECT, CONTENT:CONTENT, key: secrectKey.secretKey}, {headers: 
+    {
+        'contentType': 'application/json',
+        'User-Agent': 'DEVICE-AGENT',
+        'userAgent': 'DEVICE-AGENT',
+        'Authorization': getCookie('xToken')
+    }
+})
     .then((res) => {
       console.log('updata:  ',res);
       if(res.data.result === 'success') {
@@ -79,7 +88,14 @@ const editChange = (SEQ) => {
     const removeTable = (SEQ) => {
     const urlRemove = `http://localhost:3000/api/notice/remove`
     if(window.confirm('삭제하시겠습니까?')) {
-      axios.post(urlRemove, {SEQ:SEQ})
+      axios.post(urlRemove, {SEQ:SEQ, key: secrectKey.secretKey}, {headers: 
+        {
+            'contentType': 'application/json',
+            'User-Agent': 'DEVICE-AGENT',
+            'userAgent': 'DEVICE-AGENT',
+            'Authorization': getCookie('xToken')
+        }
+    })
       // .then((data) => {console.log(data)})
       .then((data) => {
         if(data.data.result === 'success') {

@@ -13,6 +13,8 @@ import axios from "axios";
 // import Paging from "../../components/Paging";
 import NoticeList from "./NoticeList";
 import Select from "react-select";
+import secrectKey from'../../Utils/secretkey'
+import { getCookie } from "Utils/Cookie";
 // import CuntryDetailTest from "../../components/Customer";
 
 
@@ -28,12 +30,14 @@ const NoticeTables = ({props}) => {
     const [loading, setLoading] = useState(false);
 
     const [currentPage, setCurrentPage] = useState(1);
-    const [postsPerPage] = useState(100);
+    const [postsPerPage] = useState(10);
     const [totalCount, setTotalCount] = useState("");
     
     const [SUBJECT, setSUBJECT] = useState('');
     const [CONTENT, setCONTENT] = useState('');
     const [active, setActive] = useState('');
+    const [LOGINID, setLOGINID] = useState('');
+    const [USER_SEQ, setUSER_SEQ] = useState('');
 
     const [modal, setModal] = useState(false);
     const toggle = () => setModal(!modal);
@@ -53,9 +57,17 @@ const NoticeTables = ({props}) => {
 
     const noticeLists = async () => {
       setLoading(true);
-      axios.post(urlList)
+      axios.post(urlList, {key: secrectKey.secretKey}, {headers: 
+        {
+            'contentType': 'application/json',
+            'User-Agent': 'DEVICE-AGENT',
+            'userAgent': 'DEVICE-AGENT',
+            'Authorization': getCookie('xToken')
+        }
+    })
         .then((res) => {
           setPosts(res.data.data.list);
+          console.log(res.data.data.list);
           setTotalCount(res.data.data.totalCount);
           setLoading(false)
         });
@@ -72,7 +84,15 @@ const NoticeTables = ({props}) => {
           CONTENT: CONTENT,
           SUBJECT: SUBJECT,
           active: active,
-      })
+          key: secrectKey.secretKey
+      }, {headers: 
+        {
+            'contentType': 'application/json',
+            'User-Agent': 'DEVICE-AGENT',
+            'userAgent': 'DEVICE-AGENT',
+            'Authorization': getCookie('xToken')
+        }
+    })
           .then((res) => {
           setPosts(res.data.data.list);
           setTotalCount(res.data.data.totalCount)
@@ -85,10 +105,18 @@ const NoticeTables = ({props}) => {
   };
   const SearchReset  = async () => {
     setLoading(true);
-    axios.post("http://localhost:3000/api/notice/reactlist")
+    axios.post("http://localhost:3000/api/notice/reactlist", {key: secrectKey.secretKey}, {headers: 
+    {
+        'contentType': 'application/json',
+        'User-Agent': 'DEVICE-AGENT',
+        'userAgent': 'DEVICE-AGENT',
+        'Authorization': getCookie('xToken')
+    }
+})
         .then((res) => {
         setPosts(res.data.data.list);
         setTotalCount(res.data.data.list);
+        setSUBJECT('');
         setLoading(false);
         setRefresh(oldkey => oldkey +1);
     });
@@ -105,10 +133,18 @@ const NoticeTables = ({props}) => {
     // 생성 추가
     const createChange = () => {
       toggle();
-      axios.post('http://localhost:3000/api/notice/create', {SUBJECT: SUBJECT, CONTENT:CONTENT})
+      axios.post('http://localhost:3000/api/notice/create', {SUBJECT: SUBJECT, CONTENT:CONTENT, LOGINID:LOGINID, USER_SEQ:USER_SEQ, key: secrectKey.secretKey }, {headers: 
+      {
+          'contentType': 'application/json',
+          'User-Agent': 'DEVICE-AGENT',
+          'userAgent': 'DEVICE-AGENT',
+          'Authorization': getCookie('xToken')
+      }
+  })
         .then((data) => {
           console.log('data:  ', data)
           if(data.data.result === 'success') {
+            console.log('create',data.data.list)
             alert('목록 생성 성공')
           } else if(data.data.result === 'fail') {
             alert('생성 실패')
@@ -154,22 +190,11 @@ const NoticeTables = ({props}) => {
                         <CardBody>
                             <Row>
                                 <Col md='2'>
-                                  {/* <Select
-                                    className="react-select primary"
-                                    classNamePrefix="react-select"
-                                    value={selectOptions.find((op) => { // choice state에 따라 디폴트 option 세팅 
-                                    return op.value === active; })} 
-                                    placeholder="선택해주세요." 
-                                    onChange={(value) => { onChange(value.value); }} 
-                                    options={selectOptions}
-                                  /> */}
                                   <p>공지사항 검색</p>
                                 </Col>
                                 <Col md='7'>
                                     <InputGroup className="no-border">
-                                      {/* ({ target: { value } }) => setName(value) */}
-                                      <Input  placeholder="Search..." id='searchInput'  onChange={ ( {target: {value}} ) => {setSUBJECT(value)  }   } />
-                                      {/* <Input  placeholder="Search..." id='searchInput'  /> */}
+                                      <Input  placeholder="Search..." id='searchInput' value={SUBJECT}  onChange={ ( {target: {value}} ) => {setSUBJECT(value)  }   } />
                                     </InputGroup>
                                 </Col>
                                 <Col md='3' >
@@ -233,6 +258,7 @@ const NoticeTables = ({props}) => {
        {/* 생성모달 */}
        <Modal isOpen={modal} toggle={toggle} backdrop={false} >
         <ModalHeader>공지 사항 추가</ModalHeader>
+        {/* <Input type='hidden' value={USER_SEQ} name="USER_SEQ" onChange={(e) => setUSER_SEQ(e.target.value)} /> */}
         <ModalBody>
           <FormGroup>
             <Label>제목을 입력하세요</Label>

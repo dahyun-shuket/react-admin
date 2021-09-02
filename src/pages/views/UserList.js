@@ -23,6 +23,8 @@ import {
 
 import axios from "axios";
 import moment from "moment";
+import secrectKey from'../../Utils/secretkey'
+import { getCookie } from "Utils/Cookie";
 
 const thead = ["아이디", "구분", "생성일", "수정일"];
 
@@ -43,11 +45,19 @@ const UserList = ({props, posts, types}) => {
   const editChange = (SEQ) => {
     toggle();
     const urlGet = `http://localhost:3000/api/users/get`;
-    axios.post(urlGet, {SEQ:SEQ, LOGINID:LOGINID})
+    axios.post(urlGet, {SEQ:SEQ, LOGINID:LOGINID, USERTYPE:USERTYPE, key: secrectKey.secretKey}, 
+      {headers: 
+        {
+            'contentType': 'application/json',
+            'User-Agent': 'DEVICE-AGENT',
+            'userAgent': 'DEVICE-AGENT',
+            'Authorization': getCookie('xToken')
+        }
+      })
       .then((res) => {
-        console.log('get:  ', res)
         setSEQ(res.data.data.SEQ)
         setLOGINID(res.data.data.LOGINID)
+        setUSERTYPE(res.data.data.USERTYPE)
       })
   }
 
@@ -55,17 +65,34 @@ const UserList = ({props, posts, types}) => {
   const editUser = () => {
     toggle();
     const urlUpdate = `http://localhost:3000/api/users/update`;
-    axios.post(urlUpdate, {SEQ:SEQ, LOGINID:LOGINID, PWD:PWD})
+    axios.post(urlUpdate, {SEQ:SEQ, LOGINID:LOGINID, PWD:PWD, USERTYPE:USERTYPE, key: secrectKey.secretKey}, 
+      {headers: 
+        {
+            'contentType': 'application/json',
+            'User-Agent': 'DEVICE-AGENT',
+            'userAgent': 'DEVICE-AGENT',
+            'Authorization': getCookie('xToken')
+        }
+      })
       .then((res) => {
         console.log('update:  ', res)
         if(res.data.result === 'success') {
           alert('수정 성공')
-          window.location.reload();
+          // window.location.reload();
         } else if(res.data.result === 'fail') {
           alert('수정 실패')
           return;
         }
       })
+  }
+  // 추가 이벤트
+  const handleChange = (e, type) => {
+    const value = e.target.value;
+    if(type === 'userType') {
+      setUSERTYPE(value);
+      console.log(value);
+      console.log('유저 타입 설정')
+    }
   }
 
   // 리셋
@@ -78,7 +105,15 @@ const UserList = ({props, posts, types}) => {
   const removeUser = (SEQ) => {
     const urlRemove = 'http://localhost:3000/api/users/remove';
     if(window.confirm('삭제하시겠습니까?')) {
-        axios.post(urlRemove, {SEQ:SEQ})
+        axios.post(urlRemove, {SEQ:SEQ, key: secrectKey.secretKey}, 
+          {headers: 
+            {
+                'contentType': 'application/json',
+                'User-Agent': 'DEVICE-AGENT',
+                'userAgent': 'DEVICE-AGENT',
+                'Authorization': getCookie('xToken')
+            }
+          })
         .then((data) => {
           window.location.reload();
             if(data.data.result === 'success') {
@@ -150,7 +185,15 @@ const UserList = ({props, posts, types}) => {
               <Label>비밀번호를 입력하세요.</Label>
               <Input  name='PWD' onChange={(e) => setPWD(e.target.value)}  />
             </FormGroup>
-            
+            <FormGroup>
+              <Label>유저 타입을 선택하세요</Label>
+              <Input type='select' name='USERTYPE' value={USERTYPE} onChange={e => handleChange(e, 'userType')}>
+                <option name="" value={''}>선택하세요</option>
+                <option name="A" value={'A'}>관리자</option>
+                <option name="M" value={'M'}>마트관리자</option>
+                <option name="U" value={'U'}>구직자</option>
+              </Input>
+            </FormGroup>
           </ModalBody>
           <ModalFooter>
             <Button color="primary"  onClick={(e) => editUser(e.target.value)}>수정</Button>{' '}

@@ -5,8 +5,8 @@ import { Button, Form, Modal,ModalHeader,ModalBody,
 // import Select from "react-select";
 import axios from "axios";
 import moment from "moment";
-
-// const thead = ["제목", "내용", "작성일", "수정일"];
+import secrectKey from'../../Utils/secretkey'
+import { getCookie } from "Utils/Cookie";
 
 
 function MartList({ posts, loading, props }) {
@@ -98,7 +98,7 @@ function MartList({ posts, loading, props }) {
         // formData.append('fileName', inputs.uploadFile.value);
         const config = {
             headers: {
-                'content-type' : 'multipart/form-data'
+                'content-type' : 'multipart/form-data',
             }
         }
         console.log(formData);
@@ -119,15 +119,18 @@ function MartList({ posts, loading, props }) {
 
           const config = {
             headers: {
-                'Content-type': 'application/json'
+                'Content-type': 'application/json',
+                'User-Agent': 'DEVICE-AGENT',
+                'userAgent': 'DEVICE-AGENT',
+                'Authorization': getCookie('xToken')
             }
           }
           console.log("res.data.data ? ? ? ? ? ? ? ?@@@@@@@" + JSON.stringify(res.data.data))
            axios.post('http://localhost:3000/api/mart/updateLogo', 
            {
-             SEQ:SEQ, 
-             LOGOFILE: 'martlogo/'+res.data.data.filename,
-            //  LOCATION: 'martlogo'
+              SEQ:SEQ, 
+              LOGOFILE: 'martlogo/'+res.data.data.filename,
+              key: secrectKey.secretKey
            }
            , config
            )
@@ -186,14 +189,22 @@ function MartList({ posts, loading, props }) {
           editToggle();
           const urlEdit = `http://localhost:3000/api/mart/update`;
           
-          axios.post(urlEdit, {SEQ:SEQ, NAME:NAME, REGNO:REGNO, ADDRESS:ADDRESS, CONTACT:CONTACT, POSTCODE:POSTCODE, ADDRESSEXTRA:ADDRESSEXTRA, HRONAME:HRONAME, HRORANK:HRORANK, HROCONTACT:HROCONTACT})
+          axios.post(urlEdit, {SEQ:SEQ, NAME:NAME, REGNO:REGNO, ADDRESS:ADDRESS, CONTACT:CONTACT, POSTCODE:POSTCODE, ADDRESSEXTRA:ADDRESSEXTRA, HRONAME:HRONAME, HRORANK:HRORANK, HROCONTACT:HROCONTACT, key: secrectKey.secretKey}, {headers: 
+            {
+                'contentType': 'application/json',
+                'User-Agent': 'DEVICE-AGENT',
+                'userAgent': 'DEVICE-AGENT',
+                'Authorization': getCookie('xToken')
+            }
+        })
             .then((res) => {
               console.log('updata:  ',res);
-              if(res.data.martInfo === 'success') {
-                alert('수정 성공')
+              if(res.data.result === 'success') {
+                alert('수정 성공');
+                console.log('수정 성공')
                 // 새로고침
                 window.location.reload();
-              } else if(res.data.martInfo === 'fail') {
+              } else if(res.data.result === 'fail') {
                 alert('수정 실패')
                 return;
               }
@@ -208,7 +219,14 @@ function MartList({ posts, loading, props }) {
       const removeChange = (SEQ) => {
           const urlRemove = 'http://localhost:3000/api/mart/remove';
           if(window.confirm('삭제 하시겠습니까?')) {
-              axios.post(urlRemove, {SEQ:SEQ})
+              axios.post(urlRemove, {SEQ:SEQ, key: secrectKey.secretKey}, {headers: 
+                {
+                    'contentType': 'application/json',
+                    'User-Agent': 'DEVICE-AGENT',
+                    'userAgent': 'DEVICE-AGENT',
+                    'Authorization': getCookie('xToken')
+                }
+            })
                   .then((res) => {
                       if(res.data.result === 'success') {
                           console.log('성공 result', res.data.result)
@@ -250,7 +268,7 @@ function MartList({ posts, loading, props }) {
         <>
           {posts && posts.map((post) => (
             <tr key={post.SEQ} >
-              {/* <td>{post.SEQ}</td> */}
+              <td>{post.SEQ}</td>
                 <td>{post.NAME}</td>
                 <td><img src={'http://localhost:3000/api/files/get/'+post.LOGOFILE} alt={LOGOFILE} name={LOGOFILE} />  </td>
                 <td>{post.REGNO}</td>

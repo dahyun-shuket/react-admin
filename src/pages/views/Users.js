@@ -10,6 +10,8 @@ import axios from "axios";
 // import Paging from "../../components/Paging";
 import UserList from "./UserList";
 import Pagination from "rc-pagination";
+import secrectKey from'../../Utils/secretkey'
+import { getCookie } from "Utils/Cookie";
 
 const thead = ["아이디", "구분", "생성일", "수정일"];
 
@@ -55,11 +57,19 @@ const RegularTables = ({props}) => {
     useEffect(() => {
       setLoading(true);
       console.log("USERTYPE ? ?   " , USERTYPE)
-      axios.post(url, {USERTYPE:USERTYPE})
+      axios.post(url, {USERTYPE:USERTYPE, key: secrectKey.secretKey}, {headers: 
+        {
+            'contentType': 'application/json',
+            'User-Agent': 'DEVICE-AGENT',
+            'userAgent': 'DEVICE-AGENT',
+            'Authorization': getCookie('xToken')
+        }
+    })
         .then((res) => {
           setPosts(res.data.data.list);
           setTotalCount(res.data.data.totalCount);
           setLoading(false);
+          console.log(res);
         })
     }, [refresh]);
     
@@ -67,7 +77,14 @@ const RegularTables = ({props}) => {
 
   const ResumetList  = async () => {
     // setLoading(true);
-    axios.post(url)
+    axios.post(url, {key: secrectKey.secretKey}, {headers: 
+      {
+          'contentType': 'application/json',
+          'User-Agent': 'DEVICE-AGENT',
+          'userAgent': 'DEVICE-AGENT',
+          'Authorization': getCookie('xToken')
+      }
+  })
         .then((res) => {
         setPosts(res.data.data.list);
         setTotalCount(res.data.data.totalCount);
@@ -103,7 +120,7 @@ const RegularTables = ({props}) => {
   // 추가 모달
   const createChange = () => {
     createToggle();
-    axios.post('http://localhost:3000/api/users/idCheck', {LOGINID:LOGINID})
+    axios.post('http://localhost:3000/api/users/checkid', {LOGINID:LOGINID})
     .then((res) => {
       if(res.data.data.tf === true) {
         axios.post('http://localhost:3000/api/users/create', {USERTYPE:USERTYPE, LOGINID:LOGINID, PWD:PWD})
