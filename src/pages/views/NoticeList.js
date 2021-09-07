@@ -18,12 +18,33 @@ function NoticeList({ posts, loading, props }) {
   const [SUBJECT, setSUBJECT] = useState('');
   const [CONTENT, setCONTENT] = useState('');
   const [SEQ, setSEQ] = useState('');
+  const [auth, setAuth] = useState(null);
   //보기모달
   const [viewModal, setViewModal] = useState(false);
   const viewToggle = () => setViewModal(!viewModal);
   //수정모달
   const [editModal, setEditModal] = useState(false);
   const editToggle = () => setEditModal(!editModal);
+
+  const authUser = () => {
+    axios.post('http://localhost:3000/api/auth', {key: secrectKey.secretKey}, {
+      headers: {
+          'contentType': 'application/json',
+          'User-Agent': 'DEVICE-AGENT',
+          'userAgent': 'DEVICE-AGENT',
+          'Authorization': getCookie('xToken')
+      }
+  })
+  .then((res) => {
+    const userSeq = res.data.data;
+    res.userSeq = userSeq[0]
+    setAuth(res.data.data[0])
+    console.log('noticelist',res.data.data[0])
+})
+}
+useEffect(() => {
+  authUser();
+}, [])
 
   
   // 클릭 보기
@@ -41,8 +62,17 @@ function NoticeList({ posts, loading, props }) {
 const editChange = (SEQ) => {
   editToggle();
   const urlGet = `http://localhost:3000/api/notice/get`;
-  axios.post(urlGet, {SEQ:SEQ, SUBJECT:SUBJECT, CONTENT:CONTENT})
+  axios.post(urlGet, {SEQ:SEQ, SUBJECT:SUBJECT, CONTENT:CONTENT, userSeq:auth, key: secrectKey.secretKey}, {
+    headers: 
+{
+    'contentType': 'application/json',
+    'User-Agent': 'DEVICE-AGENT',
+    'userAgent': 'DEVICE-AGENT',
+    'Authorization': getCookie('xToken'),
+}
+})
     .then((res) => {
+      console.log('get',auth);
       console.log('get:  ', res)
       console.log('seq', res.data.data.SEQ)
       setSEQ(res.data.data.SEQ)
@@ -56,7 +86,7 @@ const editChange = (SEQ) => {
   editToggle();
   const urlEdit = `http://localhost:3000/api/notice/update`;
   
-  axios.post(urlEdit, {SEQ:SEQ, SUBJECT:SUBJECT, CONTENT:CONTENT, key: secrectKey.secretKey}, {headers: 
+  axios.post(urlEdit, {SEQ:SEQ, SUBJECT:SUBJECT, CONTENT:CONTENT, userSeq:auth, key: secrectKey.secretKey}, {headers: 
     {
         'contentType': 'application/json',
         'User-Agent': 'DEVICE-AGENT',
@@ -66,6 +96,7 @@ const editChange = (SEQ) => {
 })
     .then((res) => {
       console.log('updata:  ',res);
+      console.log('update-get', auth)
       if(res.data.result === 'success') {
         alert('수정 성공')
         // 새로고침
