@@ -28,6 +28,7 @@ const NoticeTables = ({props}) => {
     const [posts, setPosts] = useState([]);
     const [refresh, setRefresh] = useState(0);
     const [loading, setLoading] = useState(false);
+    const [auth, setAuth] = useState(null);
 
     const [currentPage, setCurrentPage] = useState(1);
     const [postsPerPage] = useState(10);
@@ -41,19 +42,7 @@ const NoticeTables = ({props}) => {
 
     const [modal, setModal] = useState(false);
     const toggle = () => setModal(!modal);
-    
-
-    let selectOptions = [
-      {value: posts !== null ?  posts.SUBJECT : [] , label: '제목 검색'},
-      {value: posts !== null ?  posts.CONTENT : [] , label: '내용 검색'},
-    ];
-    // console.log('SUBJECT ?? '+JSON.stringify(selectOptions));
-
-    const onChange = (value) => { 
-      // 콜백 함수 정의 
-      setActive(value);
-      console.log('value ? ? ?' +value)
-  }
+  
 
     const noticeLists = async () => {
       setLoading(true);
@@ -72,9 +61,26 @@ const NoticeTables = ({props}) => {
           setLoading(false)
         });
     };
+    const authUser = () => {
+      axios.post('http://localhost:3000/api/auth', {key: secrectKey.secretKey}, {
+        headers: {
+            'contentType': 'application/json',
+            'User-Agent': 'DEVICE-AGENT',
+            'userAgent': 'DEVICE-AGENT',
+            'Authorization': getCookie('xToken')
+        }
+    })
+    .then((res) => {
+      const userSeq = res.data.data;
+      res.userSeq = userSeq[0]
+      setAuth(res.data.data[0])
+      console.log('test',res.data.data[0])
+  })
+  }
     
     useEffect(() => {
       noticeLists();
+      authUser();
     }, [refresh]);
 
     // 검색 버튼
@@ -133,7 +139,7 @@ const NoticeTables = ({props}) => {
     // 생성 추가
     const createChange = () => {
       toggle();
-      axios.post('http://localhost:3000/api/notice/create', {SUBJECT: SUBJECT, CONTENT:CONTENT, LOGINID:LOGINID, USER_SEQ:USER_SEQ, key: secrectKey.secretKey }, {headers: 
+      axios.post('http://localhost:3000/api/notice/create', {SUBJECT: SUBJECT, CONTENT:CONTENT, LOGINID:LOGINID, userSeq:auth, key: secrectKey.secretKey }, {headers: 
       {
           'contentType': 'application/json',
           'User-Agent': 'DEVICE-AGENT',
