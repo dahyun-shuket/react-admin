@@ -10,6 +10,7 @@ import { getCookie } from "Utils/Cookie";
 
 
 function MartList({ posts, loading, props }) {
+    const [auth, setAuth] = useState(null);
     //수정모달
     const [editModal, setEditModal] = useState(false);
     const editToggle = () => setEditModal(!editModal);
@@ -189,7 +190,7 @@ function MartList({ posts, loading, props }) {
           editToggle();
           const urlEdit = `http://localhost:3000/api/mart/update`;
           
-          axios.post(urlEdit, {SEQ:SEQ, NAME:NAME, REGNO:REGNO, ADDRESS:ADDRESS, CONTACT:CONTACT, POSTCODE:POSTCODE, ADDRESSEXTRA:ADDRESSEXTRA, HRONAME:HRONAME, HRORANK:HRORANK, HROCONTACT:HROCONTACT, key: secrectKey.secretKey}, {headers: 
+          axios.post(urlEdit, {userSeq:auth,SEQ:SEQ, NAME:NAME, REGNO:REGNO, ADDRESS:ADDRESS, CONTACT:CONTACT, POSTCODE:POSTCODE, ADDRESSEXTRA:ADDRESSEXTRA, HRONAME:HRONAME, HRORANK:HRORANK, HROCONTACT:HROCONTACT, key: secrectKey.secretKey}, {headers: 
             {
                 'contentType': 'application/json',
                 'User-Agent': 'DEVICE-AGENT',
