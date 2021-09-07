@@ -6,8 +6,6 @@ import { Card, CardBody, CardHeader, CardTitle, CardFooter, InputGroup, Form, Ta
   import { post } from 'axios';
   import MartList from './MartList';
   import Pagination from "rc-pagination";
-  import secrectKey from'../../Utils/secretkey'
-  import { getCookie } from "Utils/Cookie";
 
   const thead = ["마트명", "마트로고","사업자번호", "주소","연락처", "작성일", "수정일"];
   let urlList = `http://localhost:3000/api/mart/list`;
@@ -23,7 +21,6 @@ const Mart = (props) => {
     const [ADDRESS, setADDRESS] = useState('');
     const [RENGO, setRENGO] = useState('');
     const [userSeq, setUserSeq] = useState('');
-    const [auth, setAuth] = useState(null);
 
     const [refresh, setRefresh] = useState(0);
 
@@ -42,27 +39,10 @@ const Mart = (props) => {
           console.log('몇개인지 테스트', res.data.data.totalCount)
         })
     }
-    const authUser = () => {
-      axios.post('http://localhost:3000/api/auth', {key: secrectKey.secretKey}, {
-        headers: {
-            'contentType': 'application/json',
-            'User-Agent': 'DEVICE-AGENT',
-            'userAgent': 'DEVICE-AGENT',
-            'Authorization': getCookie('xToken')
-        }
-    })
-    .then((res) => {
-      const userSeq = res.data.data;
-      res.userSeq = userSeq[0]
-      setAuth(res.data.data[0])
-      console.log('test',res.data.data[0])
-  })
-  }
   
 
     useEffect(() => {
       martLists();
-      authUser();
     }, [refresh]);
 
     const stateRefresh = async () => {
@@ -94,14 +74,7 @@ const Mart = (props) => {
   // 생성 추가
   const createChange = () => {
     toggle();
-    axios.post('http://localhost:3000/api/mart/create', {name: NAME, address:ADDRESS, userSeq:auth, key: secrectKey.secretKey}, {headers: 
-    {
-        'contentType': 'application/json',
-        'User-Agent': 'DEVICE-AGENT',
-        'userAgent': 'DEVICE-AGENT',
-        'Authorization': getCookie('xToken')
-    }
-    })
+    axios.post('http://localhost:3000/api/mart/create', {name: NAME, address:ADDRESS, userSeq:userSeq})
       .then((data) => {
         console.log('data:  ', data)
         if(data.data.result === 'success') {

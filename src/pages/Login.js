@@ -4,7 +4,6 @@ import axios from "axios";
 import { Card, CardHeader, CardBody, Row, Col, Button, Form, Label, FormGroup, Input, Container, CardGroup, InputGroup, InputGroupText, InputGroupProps } from "reactstrap";
 import { setUserSession } from "../Utils/Common";
 import { setCookie, getCookie } from "../Utils/Cookie";
-import secrectKey from'../Utils/secretkey';
 
 // import jQuery from 'jquery';
 // window.$ = window.jQuery = jQuery;
@@ -12,7 +11,6 @@ import secrectKey from'../Utils/secretkey';
 function LoginPage(props) {
     const [LOGINID, setLOGINID] = useState("");
     const [PWD, setPWD] = useState("");
-    const [auth, setAuth] = useState(null);
 
     const onSubmitHandler = async (e) => {
         e.preventDefault();
@@ -32,18 +30,9 @@ function LoginPage(props) {
         } else {
             let url = "http://localhost:3000/api/users/login";
             axios
-                .post(url, { userId: LOGINID, password: PWD }, {
-                    headers: {
-                        'ContentType': 'application/json',
-                    }
-                })
+                .post(url, { userId: LOGINID, password: PWD })
                 .then((response) => {
-                    console.log(response);
-                    // const getUser = response.data.data.LOGINID;
-                    // const userSeq = response.data.data.token;
-
-                    // const decoded = jwt_decode(response.data.data.token);
-                    // const resultTest = decoded.result[0];
+                    // console.log(response);
                     if (response.data.result === "success") {
                         setCookie('xToken', response.data.data.token, {
                             path: "/",
@@ -51,23 +40,6 @@ function LoginPage(props) {
                             sameSite: "none",
                             maxAge: 24 * 60 * 60
                         })
-                        
-                        axios.post('http://localhost:3000/api/auth', {key: secrectKey.secretKey}, {
-                            headers: {
-                                'contentType': 'application/json',
-                                'User-Agent': 'DEVICE-AGENT',
-                                'userAgent': 'DEVICE-AGENT',
-                                'Authorization': getCookie('xToken')
-                            }
-                        })
-                        .then((res) => {
-                            const userSeq = res.data.data;
-                            res.userSeq = userSeq[0]
-                            setAuth(res.data.data[0])
-                            console.log('test',res.data.data[0])
-                        })
-
-
                         // setUserSession(response.data.data.token, response.data.data.loginId);
                         alert("로그인 성공");
                         props.history.push("/admin");

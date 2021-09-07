@@ -6,6 +6,7 @@ import { Button, Card, CardHeader, CardBody,Modal,ModalHeader,ModalBody,
 import PanelHeader from "../../templates/PanelHeader";
 import Pagination from "rc-pagination";
 
+
 import axios from "axios";
 
 
@@ -22,7 +23,7 @@ const thead = ["제목", "작성자", "수정일"];
 const urlList = 'http://localhost:3000/api/notice/reactlist';
 
 
-const NoticeTables = ({props, decoded, userLoginId, userSeq}) => {
+const NoticeTables = ({props}) => {
 
     const [posts, setPosts] = useState([]);
     const [refresh, setRefresh] = useState(0);
@@ -37,13 +38,22 @@ const NoticeTables = ({props, decoded, userLoginId, userSeq}) => {
     const [active, setActive] = useState('');
     const [LOGINID, setLOGINID] = useState('');
     const [USER_SEQ, setUSER_SEQ] = useState('');
-    const [auth, setAuth] = useState(null);
-
-    // const [userSeq, setUserSeq] = useState('');
 
     const [modal, setModal] = useState(false);
     const toggle = () => setModal(!modal);
+    
 
+    let selectOptions = [
+      {value: posts !== null ?  posts.SUBJECT : [] , label: '제목 검색'},
+      {value: posts !== null ?  posts.CONTENT : [] , label: '내용 검색'},
+    ];
+    // console.log('SUBJECT ?? '+JSON.stringify(selectOptions));
+
+    const onChange = (value) => { 
+      // 콜백 함수 정의 
+      setActive(value);
+      console.log('value ? ? ?' +value)
+  }
 
     const noticeLists = async () => {
       setLoading(true);
@@ -57,30 +67,14 @@ const NoticeTables = ({props, decoded, userLoginId, userSeq}) => {
     })
         .then((res) => {
           setPosts(res.data.data.list);
+          console.log(res.data.data.list);
           setTotalCount(res.data.data.totalCount);
           setLoading(false)
-
         });
     };
-    const authUser = () => {
-      axios.post('http://localhost:3000/api/auth', {key: secrectKey.secretKey}, {
-        headers: {
-            'contentType': 'application/json',
-            'User-Agent': 'DEVICE-AGENT',
-            'userAgent': 'DEVICE-AGENT',
-            'Authorization': getCookie('xToken')
-        }
-    })
-    .then((res) => {
-      const userSeq = res.data.data;
-      res.userSeq = userSeq[0]
-      setAuth(res.data.data[0])
-      console.log('test',res.data.data[0])
-  })
-  }
+    
     useEffect(() => {
       noticeLists();
-      authUser();
     }, [refresh]);
 
     // 검색 버튼
@@ -127,34 +121,29 @@ const NoticeTables = ({props, decoded, userLoginId, userSeq}) => {
         setRefresh(oldkey => oldkey +1);
     });
 };
+
+    const searchOnchange = ( res, value ) => {
+      // { target: { value } }) => setPosts(value)
+      
+      setSUBJECT(value) 
+      setCONTENT(value) 
+    
+    }
+
     // 생성 추가
     const createChange = () => {
       toggle();
-      axios.post('http://localhost:3000/api/notice/create', {
-        SUBJECT: SUBJECT, 
-        CONTENT:CONTENT, 
-        LOGINID:LOGINID,  
-        userSeq:auth,
-        key: secrectKey.secretKey }, {
-          headers: 
+      axios.post('http://localhost:3000/api/notice/create', {SUBJECT: SUBJECT, CONTENT:CONTENT, LOGINID:LOGINID, USER_SEQ:USER_SEQ, key: secrectKey.secretKey }, {headers: 
       {
           'contentType': 'application/json',
           'User-Agent': 'DEVICE-AGENT',
           'userAgent': 'DEVICE-AGENT',
-          'Authorization': getCookie('xToken'),
+          'Authorization': getCookie('xToken')
       }
   })
         .then((data) => {
-          // console.log('userSeq',userSeq);
           console.log('data:  ', data)
           if(data.data.result === 'success') {
-
-            // setUserSeq(data.data.userSeq); 
-
-            // const decoded = jwt_decode(data.data.token);
-            // const resultUser = decoded.result[0]
-            // console.log(resultUser)
-
             console.log('create',data.data.list)
             alert('목록 생성 성공')
           } else if(data.data.result === 'fail') {
@@ -162,7 +151,6 @@ const NoticeTables = ({props, decoded, userLoginId, userSeq}) => {
             return;
           }
           setRefresh(oldkey => oldkey +1);
-
         })
         .catch((error) => {
           alert(error, '목록 생성에 실패 함')
