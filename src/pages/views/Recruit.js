@@ -6,6 +6,8 @@ import Select from "react-select";
 import "rc-pagination/assets/index.css";
 import Pagination from "rc-pagination";
 import PanelHeader from "../../templates/PanelHeader";
+import secrectKey from'../../Utils/secretkey'
+import { getCookie } from "Utils/Cookie";
 
 import { Button, Card, CardHeader, CardBody, CardTitle, Table, Row, Col, CardFooter, Label, InputGroup, FormGroup, Input } from "reactstrap";
 const Recruit = () => {
@@ -25,11 +27,20 @@ const Recruit = () => {
     ];
     const RecruitList = async () => {
         setLoading(true);
-        axios.post("http://localhost:3000/api/recruit/reactlist").then((response) => {
-            setRecruitLists(response.data.data.list);
-            setTotalCount(response.data.data.totalCount);
-            setLoading(false);
-        });
+        axios.post("http://localhost:3000/api/recruit/reactlist",
+        {key: secrectKey.secretKey
+        }, {headers: 
+            {
+                'contentType': 'application/json',
+                
+                
+                'Authorization': getCookie('xToken')
+            }
+        }).then((response) => {
+                setRecruitLists(response.data.data.list);
+                setTotalCount(response.data.data.totalCount);
+                setLoading(false);
+            });
     };
 
     const onChange = (value) => {
@@ -71,6 +82,14 @@ const Recruit = () => {
                 name: name,
                 regions: getRegions(),
                 active: active,
+                key: secrectKey.secretKey
+            }, {headers: 
+                {
+                    'contentType': 'application/json',
+                    
+                    
+                    'Authorization': getCookie('xToken')
+                }
             })
             .then((response) => {
                 setRecruitLists(response.data.data.list);

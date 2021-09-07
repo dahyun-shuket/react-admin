@@ -23,6 +23,14 @@ const ResumeView = () => {
         await axios
             .post("http://localhost:3000/api/resume/get", {
                 seq: id,
+                key: secrectKey.secretKey
+            }, {headers: 
+                {
+                    'contentType': 'application/json',
+                    'User-Agent': 'DEVICE-AGENT',
+                    'userAgent': 'DEVICE-AGENT',
+                    'Authorization': getCookie('xToken')
+                }
             })
             .then((response) => {
                 setResumeDetailData(response.data.data);
@@ -36,6 +44,14 @@ const ResumeView = () => {
         await axios
             .post("http://localhost:3000/api/resume/listCareer", {
                 resumeSeq: id,
+                key: secrectKey.secretKey
+            }, {headers: 
+                {
+                    'contentType': 'application/json',
+                    'User-Agent': 'DEVICE-AGENT',
+                    'userAgent': 'DEVICE-AGENT',
+                    'Authorization': getCookie('xToken')
+                }
             })
             .then((response) => {
                 setCareerListData(response.data.data);
@@ -73,8 +89,16 @@ const ResumeView = () => {
     const ButtonCertificate = async () => {
         await axios
             .post(`http://localhost:3000/api/resume/certificate`,{
-                seq:id
-            })
+                seq:id,
+                key: secrectKey.secretKey
+                    }, {headers: 
+                        {
+                            'contentType': 'application/json',
+                            'User-Agent': 'DEVICE-AGENT',
+                            'userAgent': 'DEVICE-AGENT',
+                            'Authorization': getCookie('xToken')
+                        }
+                    })
             .then(() => {
                 window.location.reload()
             });
@@ -82,8 +106,16 @@ const ResumeView = () => {
     const ButtonCertificateCancel = async () => {
         await axios
             .post(`http://localhost:3000/api/resume/clearCertificate`,{
-                seq:id
-            })
+                seq:id,
+                key: secrectKey.secretKey
+                    }, {headers: 
+                        {
+                            'contentType': 'application/json',
+                            'User-Agent': 'DEVICE-AGENT',
+                            'userAgent': 'DEVICE-AGENT',
+                            'Authorization': getCookie('xToken')
+                        }
+                    })
             .then(() => {
                 window.location.reload()
             });
@@ -119,9 +151,7 @@ const ResumeView = () => {
                                         toggleTab("1");
                                     }}
                                 >
-                                    {/* <NavLink>
-                                        </NavLink> */}
-                                        이력서 내용
+                                이력서 내용
                                 </NavLink>
                             </NavItem>
                             <NavItem xs={12}>
@@ -131,9 +161,7 @@ const ResumeView = () => {
                                         toggleTab("2");
                                     }}
                                 >
-                                    {/* <NavLink>
-                                        </NavLink> */}
-                                        경력 사항
+                                경력 사항
                                 </NavLink>
                             </NavItem>
                         </Nav>
@@ -209,7 +237,6 @@ const ResumeView = () => {
                                     </Col>
                                 </Row>
                             </TabPane>
-
                             <TabPane tabId="2">
                                 <Row>
                                     <Col xs={12}>

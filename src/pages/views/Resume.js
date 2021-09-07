@@ -7,7 +7,8 @@ import Select from "react-select";
 import "rc-pagination/assets/index.css";
 import Pagination from "rc-pagination";
 import PanelHeader from "../../templates/PanelHeader";
-
+import secrectKey from'../../Utils/secretkey'
+import { getCookie } from "Utils/Cookie";
 const Resume = () => {
     const [resumeLists, setResumeLists] = useState([]);
     const [loading, setLoading] = useState(false);
@@ -30,7 +31,14 @@ const Resume = () => {
 
     const ResumetList = async () => {
         setLoading(true);
-        axios.post("http://localhost:3000/api/resume/reactlist").then((response) => {
+        axios.post("http://localhost:3000/api/resume/reactlist",
+        {key: secrectKey.secretKey
+        }, {headers: 
+            {
+                'contentType': 'application/json',
+                'Authorization': getCookie('xToken')
+            }
+        }).then((response) => {
             setResumeLists(response.data.data.list);
             setTotalCount(response.data.data.totalCount);
             setLoading(false);
@@ -88,7 +96,12 @@ const Resume = () => {
                 name: name,
                 certificate: certificate,
                 regions: getRegions(),
-                jobKinds: getJobKinds(),
+                jobKinds: getJobKinds(),key: secrectKey.secretKey
+            }, {headers: 
+                {
+                    'contentType': 'application/json',
+                    'Authorization': getCookie('xToken')
+                }
             })
             .then((response) => {
                 setResumeLists(response.data.data.list);
