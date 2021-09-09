@@ -1,13 +1,9 @@
 import React, { useState } from "react";
 import { Link, Router } from "react-router-dom";
 import axios from "axios";
-import { Card, CardHeader, CardBody, Row, Col, Button, Form, Label, FormGroup, Input, Container, CardGroup, InputGroup, InputGroupText, InputGroupProps } from "reactstrap";
-import { setUserSession } from "../Utils/Common";
+import { Card, CardHeader, CardBody, Row, Col, Button, Form, Label, FormGroup, Input, Container, CardGroup } from "reactstrap";
 import { setCookie, getCookie } from "../Utils/Cookie";
 import secrectKey from'../Utils/secretkey';
-
-// import jQuery from 'jquery';
-// window.$ = window.jQuery = jQuery;
 
 function LoginPage(props) {
     const [LOGINID, setLOGINID] = useState("");
@@ -38,7 +34,6 @@ function LoginPage(props) {
                     }
                 })
                 .then((response) => {
-                    // console.log(response);
                     if (response.data.result === "success") {
                         setCookie('xToken', response.data.data.token, {
                             path: "/",
@@ -56,6 +51,7 @@ function LoginPage(props) {
                         })
                         .then((res) => {
                             const userSeq = res.data.data;
+                            console.log(JSON.stringify(res));
                             res.userSeq = userSeq[0]
                             setAuth(res.data.data[0])
                             console.log('test',res.data.data[0])
