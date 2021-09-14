@@ -1,19 +1,21 @@
-import React, {useEffect, useState} from "react";
-import { Link } from "react-router-dom";
-import { Button, Card, CardHeader, CardBody, UncontrolledTooltip,Modal,ModalHeader,ModalBody,
-  ModalFooter, CardTitle, Table, Row, Col, CardFooter, Label, InputGroup, FormGroup, Input } from "reactstrap";
-import Select from "react-select";
+import React, {useEffect, useState, useMemo} from "react";
+import { Button, Modal,ModalHeader,ModalBody,
+  ModalFooter,  Label,  FormGroup, Input } from "reactstrap";
 import axios from "axios";
 import moment from "moment";
 import secrectKey from'../../Utils/secretkey'
 import { getCookie } from "Utils/Cookie";
-
-const thead = ["제목","작성자", "수정일"];
+// react-quill modules
+import CustomToolbar from "./CustomToolbar";
+import ReactQuill, {Quill} from 'react-quill'; 
+import 'react-quill/dist/quill.snow.css';
+import imageUrlHandler from "quill-image-uploader";
+import ImageResize from 'quill-image-resize';
+Quill.register("modules/imageUploader", imageUrlHandler);
+Quill.register('modules/ImageResize', ImageResize);
 
 
 function NoticeList({ posts, loading, props }) {
-
-
 
   const [SUBJECT, setSUBJECT] = useState('');
   const [CONTENT, setCONTENT] = useState('');
@@ -140,8 +142,44 @@ const editChange = (SEQ) => {
       })}
     }
     
+    // react-quill 사용
+    const modules = useMemo(() => ({
+      toolbar:  '#toolbar',
+      ImageResize: {
+        parchment: Quill.import('parchment')
+      },
+      imageUploader: {
+        upload: uploadFile => {
+            return new Promise((resolve, reject) => {
+                const formData = new FormData();
+                formData.append('location', 'notice');
+                formData.append("uploadFile", uploadFile);
+                fetch(
+                    "http://localhost:3000/api/files/uploadSingle",
+                    {
+                        method: "POST",
+                        body: formData
+                    }
+                )
+                    .then(response => response.json())
+                    .then(result => {
+                        const hostName = 'http://localhost:3000/PDSData/uploads/notice/'+result.data.filename;
+                        console.log("Upload result", result);
+                        resolve(hostName);
+                    })
+                    .catch(error => {
+                        reject("Upload failed");
+                        console.error("Error:", error);
+                    });
+            });
+        }
+      }
+    }), [])
 
-    
+    const ContentChange = (content) => {
+      console.log('onChange', content);
+      setCONTENT(content);
+    }
 
     return (
         <>
@@ -175,7 +213,14 @@ const editChange = (SEQ) => {
 
             <FormGroup>
               <Label>내용을 입력하세요</Label>
-              <Input  value={CONTENT} name='CONTENT' onChange={(e) => setCONTENT(e.target.value)} type="textarea" />
+              <CustomToolbar />
+              <ReactQuill
+                style={{height:'300px'}}
+                theme='snow'
+                modules={modules}
+                value={CONTENT}
+                onChange={ContentChange}
+              />
             </FormGroup>
             
           </ModalBody>

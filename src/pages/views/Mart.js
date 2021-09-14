@@ -9,7 +9,7 @@ import { Card, CardBody, CardHeader, CardTitle, CardFooter, InputGroup, Form, Ta
   import secrectKey from'../../Utils/secretkey'
   import { getCookie } from "Utils/Cookie";
 
-  const thead = ["마트명", "마트로고","사업자번호", "주소","연락처", "작성일", "수정일"];
+  const thead = ["마트명", "마트로고","사업자번호", "주소","연락처", "작성일", "수정일", ""];
   let urlList = `http://localhost:3000/api/mart/list`;
 
 const Mart = (props) => {
@@ -118,27 +118,27 @@ const Mart = (props) => {
       })
       resetInput();
 }
- // reset
- const resetInput = () => {
-  toggle();
-  setNAME('');
-  setADDRESS('');
-  setRENGO('');
-}
-const MartSearchReset = async () => {
-  setLoading(true);
-  axios.post(urlList)
-    .then((res) => {
-      setPosts(res.data.data.list);
-      setLoading(false);
-      setNAME('');
-      setRefresh(oldkey => oldkey +1);
-    })
-};
+  // reset
+  const resetInput = () => {
+    toggle();
+    setNAME('');
+    setADDRESS('');
+    setRENGO('');
+  }
+  const MartSearchReset = async () => {
+    setLoading(true);
+    axios.post(urlList)
+      .then((res) => {
+        setPosts(res.data.data.list);
+        setLoading(false);
+        setNAME('');
+        setRefresh(oldkey => oldkey +1);
+      })
+  };
 
-    const indexOfLastPost = currentPage * postsPerPage;
-    const indexOfFirstPost = indexOfLastPost - postsPerPage;
-    const currentPosts = posts != null ? posts.slice(indexOfFirstPost, indexOfLastPost) : [];
+  const indexOfLastPost = currentPage * postsPerPage;
+  const indexOfFirstPost = indexOfLastPost - postsPerPage;
+  const currentPosts = posts != null ? posts.slice(indexOfFirstPost, indexOfLastPost) : [];
 
   //   if (loading) {
   //     return <h2>Loading...</h2>;
@@ -150,32 +150,32 @@ const MartSearchReset = async () => {
           <div className="content">
           <div >
 
-<Row style={{justifyContent:'center', margin:'0 auto', alignItems:'center', marginBottom:'40px'}}>
-    <Col md="12" className='text'>
-        <Card>
-          <CardHeader>
-            <CardTitle tag="h4">마트 관리</CardTitle>
-            
-          </CardHeader>
-            <CardBody>
-                <Row>
-                    <Col md='12'>
-                        <InputGroup className="no-border">
-                          <Input  placeholder="Search..." onChange={({ target: { value } }) => setNAME(value)} />
-                          
-                        </InputGroup>
-                    </Col>
-                </Row>
-            </CardBody>
-            <CardFooter>
-                <Button onClick={SearchButton} className='btn-info' style={{marginRight:'10px'}}>검색</Button>
-                <Button onClick={MartSearchReset} className='btn-info'>조건 리셋</Button>
-                <Button color="info" onClick={toggle} style={{float:'right'}} >추가 <i class="fa fa-plus"></i></Button>
-            </CardFooter>
-        </Card>
-    </Col>
-</Row>
-</div>
+          <Row style={{justifyContent:'center', margin:'0 auto', alignItems:'center', marginBottom:'40px'}}>
+              <Col md="12" className='text'>
+                  <Card>
+                    <CardHeader>
+                      <CardTitle tag="h4">마트 관리</CardTitle>
+                      
+                    </CardHeader>
+                      <CardBody>
+                          <Row>
+                              <Col md='12'>
+                                  <InputGroup className="no-border">
+                                    <Input  placeholder="Search..." onChange={({ target: { value } }) => setNAME(value)} />
+                                    
+                                  </InputGroup>
+                              </Col>
+                          </Row>
+                      </CardBody>
+                      <CardFooter>
+                          <Button onClick={SearchButton} className='btn-info' style={{marginRight:'10px'}}>검색</Button>
+                          <Button onClick={MartSearchReset} className='btn-info'>조건 리셋</Button>
+                          <Button color="info" onClick={toggle} style={{float:'right'}} >추가 <i class="fa fa-plus"></i></Button>
+                      </CardFooter>
+                  </Card>
+              </Col>
+          </Row>
+          </div>
             <Row>
               <Col xs={12}>
                 <Card>                  
