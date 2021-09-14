@@ -7,13 +7,12 @@ import {Card,CardBody,CardHeader,InputGroup,CardTitle,CardFooter,Table,Form,Row,
 // core components
 import PanelHeader from "../../templates/PanelHeader";
 import axios from "axios";
-// import Paging from "../../components/Paging";
 import UserList from "./UserList";
 import Pagination from "rc-pagination";
 import secrectKey from'../../Utils/secretkey'
 import { getCookie } from "Utils/Cookie";
 
-const thead = ["아이디", "구분", "생성일", "수정일"];
+const thead = ["아이디", "구분", "생성일", "수정일", ""];
 
 
 const RegularTables = ({props}) => {
@@ -174,6 +173,7 @@ const RegularTables = ({props}) => {
   const Utypes = posts !== null ? posts.filter((post) => {
     return (post.USERTYPE === 'U' ) 
   }) : [];
+  
 
 
     const indexOfLastPost = currentPage * postsPerPage;

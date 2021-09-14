@@ -6,6 +6,7 @@ import Resume from "./pages/views/Resume.js"
 import Notice from './pages/views/Notice';
 import Users from './pages/views/Users.js';
 import Mart from './pages/views/Mart.js';
+// import Test from './pages/views/Test.js';
 
 
 // import LoginPage from "views/Login";
@@ -40,10 +41,10 @@ var dashRoutes = [
     layout: "/admin",
   },
   // {
-  //   path: "/user-page",
-  //   name: "User Profile",
+  //   path: "/test",
+  //   name: "테스트",
   //   icon: "users_single-02",
-  //   component: UserPage,
+  //   component: Test,
   //   layout: "/admin",
   // },
   // {

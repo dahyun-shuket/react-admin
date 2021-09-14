@@ -1,29 +1,31 @@
-import React, {useEffect, useState} from "react";
-import { Button, Card, CardHeader, CardBody,Modal,ModalHeader,ModalBody,
-  ModalFooter, CardTitle, Table, Row, Col, CardFooter, Label, InputGroup, FormGroup, Input } from "reactstrap";
-// import Select from "react-select";
-
+import React, {useEffect, useMemo, useState, userRef, memo, useCallback} from "react";
+import { Button, Card, CardHeader, CardBody,Modal,ModalHeader,ModalBody, ModalFooter, CardTitle, Table, Row, Col, CardFooter, Label, InputGroup, FormGroup, Input } from "reactstrap";
 import PanelHeader from "../../templates/PanelHeader";
 import Pagination from "rc-pagination";
-
-
 import axios from "axios";
 
 
-// import Paging from "../../components/Paging";
 import NoticeList from "./NoticeList";
-import Select from "react-select";
 import secrectKey from'../../Utils/secretkey'
 import { getCookie } from "Utils/Cookie";
-// import CuntryDetailTest from "../../components/Customer";
+
+// react-quill modules
+import CustomToolbar from "./CustomToolbar";
+import ReactQuill, {Quill} from 'react-quill'; 
+import 'react-quill/dist/quill.snow.css';
+import imageUrlHandler from "quill-image-uploader";
+import ImageResize from 'quill-image-resize';
+Quill.register("modules/imageUploader", imageUrlHandler);
+Quill.register('modules/ImageResize', ImageResize);
 
 
-
-const thead = ["제목", "작성자", "수정일"];
+const thead = ["제목", "작성자", "수정일", ""];
 const urlList = 'http://localhost:3000/api/notice/reactlist';
 
 
 const NoticeTables = ({props}) => {
+
+
 
     const [posts, setPosts] = useState([]);
     const [refresh, setRefresh] = useState(0);
@@ -36,13 +38,13 @@ const NoticeTables = ({props}) => {
     
     const [SUBJECT, setSUBJECT] = useState('');
     const [CONTENT, setCONTENT] = useState('');
-    const [active, setActive] = useState('');
+    const [SEQ, setSEQ] = useState('');
     const [LOGINID, setLOGINID] = useState('');
-    const [USER_SEQ, setUSER_SEQ] = useState('');
+    const [active, setActive] = useState('');
 
     const [modal, setModal] = useState(false);
     const toggle = () => setModal(!modal);
-  
+    
 
     const noticeLists = async () => {
       setLoading(true);
@@ -56,7 +58,7 @@ const NoticeTables = ({props}) => {
     })
         .then((res) => {
           setPosts(res.data.data.list);
-          console.log(res.data.data.list);
+          // console.log(res.data.data.list);
           setTotalCount(res.data.data.totalCount);
           setLoading(false)
         });
@@ -81,7 +83,8 @@ const NoticeTables = ({props}) => {
     useEffect(() => {
       noticeLists();
       authUser();
-    }, [refresh]);
+    }, [SEQ, refresh]);
+
 
     // 검색 버튼
     const SearchButton = () => {
@@ -109,6 +112,8 @@ const NoticeTables = ({props}) => {
             console.log(err)
           })
   };
+
+
   const SearchReset  = async () => {
     setLoading(true);
     axios.post("http://localhost:3000/api/notice/reactlist", {key: secrectKey.secretKey}, {headers: 
@@ -127,14 +132,6 @@ const NoticeTables = ({props}) => {
         setRefresh(oldkey => oldkey +1);
     });
 };
-
-    const searchOnchange = ( res, value ) => {
-      // { target: { value } }) => setPosts(value)
-      
-      setSUBJECT(value) 
-      setCONTENT(value) 
-    
-    }
 
     // 생성 추가
     const createChange = () => {
@@ -170,22 +167,64 @@ const NoticeTables = ({props}) => {
       setCONTENT('');
   }
 
-
+  // pagination
   const indexOfLastPost = currentPage * postsPerPage;
   const indexOfFirstPost = indexOfLastPost - postsPerPage;
   const currentPosts = posts != null ? posts.slice(indexOfFirstPost, indexOfLastPost) : [];
+
+
 
   //   if (loading) {
   //     return <h2>Loading...</h2>;
   // }
   
+
+  // react-quill 사용
+  const modules = useMemo(() => ({
+    toolbar:  '#toolbar',
+    ImageResize: {
+      parchment: Quill.import('parchment')
+    },
+    imageUploader: {
+      upload: uploadFile => {
+          return new Promise((resolve, reject) => {
+              const formData = new FormData();
+              formData.append('location', 'notice');
+              formData.append("uploadFile", uploadFile);
+              fetch(
+                  "http://localhost:3000/api/files/uploadSingle",
+                  {
+                      method: "POST",
+                      body: formData
+                  }
+              )
+                  .then(response => response.json())
+                  .then(result => {
+                      const hostName = 'http://localhost:3000/PDSData/uploads/notice/'+result.data.filename;
+                      console.log("Upload result", result);
+                      resolve(hostName);
+                  })
+                  .catch(error => {
+                      reject("Upload failed");
+                      console.error("Error:", error);
+                  });
+          });
+      }
+    }
+  }), [])
+
+
+  const ContentChange = (content) => {
+    console.log('onChange', content);
+    setCONTENT(content);
+  }
+
   return (
     <>
+    
       <PanelHeader size="sm" />
       <div className="content">
-
       <div >
-
             <Row style={{justifyContent:'center', margin:'0 auto', alignItems:'center', marginBottom:'40px'}}>
                 <Col md="12" className='text'>
                     <Card>
@@ -221,15 +260,6 @@ const NoticeTables = ({props}) => {
       <Row >
           <Col md="12" >
             <Card >
-              {/* <CardHeader>
-                <CardTitle tag="h4">Sample Table<Button color="info" size="sm" onClick={toggle} >추가</Button></CardTitle>
-                  <Col md='10'>
-                      <InputGroup className="no-border">
-                          <Input  placeholder="Search..." id='searchInput'  onChange={({ target: { value } }) => setSUBJECT(value)} />
-                          <Button  onClick={SearchButton} className='btn-info'>검색</Button>
-                      </InputGroup>
-                  </Col>
-              </CardHeader> */}
               <CardBody>
                 <Table responsive>
                   <thead className="text-primary">
@@ -264,16 +294,29 @@ const NoticeTables = ({props}) => {
        {/* 생성모달 */}
        <Modal isOpen={modal} toggle={toggle} backdrop={false} >
         <ModalHeader>공지 사항 추가</ModalHeader>
-        {/* <Input type='hidden' value={USER_SEQ} name="USER_SEQ" onChange={(e) => setUSER_SEQ(e.target.value)} /> */}
         <ModalBody>
           <FormGroup>
             <Label>제목을 입력하세요</Label>
             <Input type='text'  id='subjectInput' name='SUBJECT' onChange={(e) => setSUBJECT(e.target.value)} />
           </FormGroup>
 
-          <FormGroup>
-            <Label>내용을 입력하세요</Label>
-            <Input  id='contentInput' name='CONTENT' onChange={(e) => setCONTENT(e.target.value)}  />
+          <FormGroup style={{marginTop:'30px'}}>
+
+            <CustomToolbar />
+            <ReactQuill
+              // ref={(el) => {   quillObj = el;  }}  
+              style={{height:'300px'}}
+              theme='snow'
+              modules={modules}
+              // formats={formats}
+              // value={text}
+              name='uploadFile'
+              placeholder={"내용을 입력하세요."}
+              onChange={ContentChange}
+              
+            />
+            {/* <EditorComponent value={CONTENT}  /> */}
+
           </FormGroup>
           
         </ModalBody>

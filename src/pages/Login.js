@@ -41,21 +41,23 @@ function LoginPage(props) {
                             sameSite: "none",
                             maxAge: 24 * 60 * 60
                         })
-                        axios.post('http://localhost:3000/api/auth', {key: secrectKey.secretKey}, {
-                            headers: {
-                                'contentType': 'application/json',
-                                'User-Agent': 'DEVICE-AGENT',
-                                'userAgent': 'DEVICE-AGENT',
-                                'Authorization': getCookie('xToken')
-                            }
-                        })
-                        .then((res) => {
-                            const userSeq = res.data.data;
-                            console.log(JSON.stringify(res));
-                            res.userSeq = userSeq[0]
-                            setAuth(res.data.data[0])
-                            console.log('test',res.data.data[0])
-                        })
+                        // axios.post('http://localhost:3000/api/auth', {key: secrectKey.secretKey}, {
+                        //     headers: {
+                        //         'contentType': 'application/json',
+                        //         'User-Agent': 'DEVICE-AGENT',
+                        //         'userAgent': 'DEVICE-AGENT',
+                        //         'Authorization': getCookie('xToken')
+                        //     }
+                        // })
+                        // .then((res) => {
+                        //     const userSeq = res.data.data;
+                        //     console.log(JSON.stringify(res));
+                        //     res.userSeq = userSeq[0]
+                        //     setAuth(res.data.data[0])
+                        //     console.log('test',res.data.data[0])
+                        // })
+
+
                         // setUserSession(response.data.data.token, response.data.data.loginId);
                         alert("로그인 성공");
                         props.history.push("/admin");
