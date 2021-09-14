@@ -96,7 +96,8 @@ const Resume = () => {
                 name: name,
                 certificate: certificate,
                 regions: getRegions(),
-                jobKinds: getJobKinds(),key: secrectKey.secretKey
+                jobKinds: getJobKinds(),
+                key: secrectKey.secretKey
             }, {headers: 
                 {
                     'contentType': 'application/json',

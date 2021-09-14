@@ -1,8 +1,9 @@
 import React, { useState } from "react";
-import { Link, Router } from "react-router-dom";
+import { Link } from "react-router-dom";
 import axios from "axios";
-import { Card, CardHeader, CardBody, Row, Col, Button, Form, Label, FormGroup, Input, Container, CardGroup } from "reactstrap";
+import { Card, CardBody, Row, Col, Button, Form, Label, FormGroup, Input, Container, CardGroup } from "reactstrap";
 import { setCookie, getCookie } from "../Utils/Cookie";
+import {getTokenCookie} from "../Utils/Common"
 import secrectKey from'../Utils/secretkey';
 
 function LoginPage(props) {
@@ -34,6 +35,7 @@ function LoginPage(props) {
                     }
                 })
                 .then((response) => {
+                    // console.log(response.data.data.token);
                     if (response.data.result === "success") {
                         setCookie('xToken', response.data.data.token, {
                             path: "/",
@@ -41,17 +43,19 @@ function LoginPage(props) {
                             sameSite: "none",
                             maxAge: 24 * 60 * 60
                         })
-                        axios.post('http://localhost:3000/api/auth', {key: secrectKey.secretKey}, {
-                            headers: {
+                        
+                        axios
+                        .post('http://localhost:3000/api/auth', {
+                            key: secrectKey.secretKey
+                        }, {headers: 
+                            {
                                 'contentType': 'application/json',
-                                'User-Agent': 'DEVICE-AGENT',
-                                'userAgent': 'DEVICE-AGENT',
                                 'Authorization': getCookie('xToken')
                             }
                         })
                         .then((res) => {
+                            // console.log(JSON.stringify(res));
                             const userSeq = res.data.data;
-                            console.log(JSON.stringify(res));
                             res.userSeq = userSeq[0]
                             setAuth(res.data.data[0])
                             console.log('test',res.data.data[0])
